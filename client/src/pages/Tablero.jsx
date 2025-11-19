@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import '../App.css';
+import { API_URL } from '../config';
+
 
 function Tablero() {
   const [tasks, setTasks] = useState([]);
@@ -10,8 +12,6 @@ function Tablero() {
   // --- NUEVOS ESTADOS PARA EDICIÓN ---
   const [editingId, setEditingId] = useState(null); // ID de la tarea que se está editando
   const [editText, setEditText] = useState('');     // Texto temporal mientras escribes
-
-  const API_URL = 'http://localhost:5000/api/tasks';
 
   const columns = {
     pendiente: { title: "Pendiente", color: "#ff7675" },

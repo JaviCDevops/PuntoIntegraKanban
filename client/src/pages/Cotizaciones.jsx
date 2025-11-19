@@ -2,13 +2,13 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import jsPDF from 'jspdf';               
 import autoTable from 'jspdf-autotable'; 
+import { API_URL } from '../config';
 
 function Cotizaciones() {
   const [quotes, setQuotes] = useState([]);
   const [formData, setFormData] = useState({ clientName: '', description: '', amount: '' });
   
 
-  const API_URL = 'http://localhost:5000/api/quotes';
 
     const formatearDinero = (valor) => {
     if (!valor) return "0";
