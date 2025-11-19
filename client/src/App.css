@@ -1,0 +1,346 @@
+/* Reinicio básico */
+body { 
+  font-family: 'Segoe UI', sans-serif; 
+  background-color: #2d3436; 
+  color: white; 
+  margin: 0; 
+}
+
+#root {
+  width: 100%; /* Asegura que ocupe todo el ancho */
+}
+
+.app-container { 
+  padding: 20px; 
+  max-width: 1200px; 
+  margin: 0 auto; 
+}
+
+h1 { text-align: center; margin-bottom: 30px; }
+
+/* --- FORMULARIO --- */
+.task-form { 
+  display: flex; 
+  gap: 10px; 
+  margin-bottom: 30px; 
+  justify-content: center; 
+}
+
+.task-form input { 
+  padding: 10px; 
+  width: 300px; 
+  border-radius: 5px; 
+  border: none; 
+  outline: none;
+}
+
+.task-form button { 
+  padding: 10px 20px; 
+  background: #0984e3; 
+  color: white; 
+  border: none; 
+  border-radius: 5px; 
+  cursor: pointer; 
+  font-weight: bold;
+}
+.task-form button:hover { background: #74b9ff; }
+
+/* --- TABLERO (Columnas) --- */
+.kanban-board {
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.kanban-column {
+  background: #dfe6e9;
+  width: 32%;
+  border-radius: 8px;
+  padding: 10px;
+  min-height: 200px;
+}
+
+.kanban-column h2 {
+  color: #2d3436;
+  font-size: 1.2rem;
+  margin-top: 0;
+  padding-bottom: 10px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.column-content {
+  min-height: 100px; 
+}
+
+/* --- TARJETAS (Tareas) --- */
+.kanban-card {
+  background: white;
+  color: #2d3436;
+  padding: 10px 15px; /* Ajustado para mejor espacio */
+  margin-bottom: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  
+  /* Flexbox para alinear texto a la izq y botones a la der */
+  display: flex;
+  justify-content: space-between; 
+  align-items: flex-start; 
+  gap: 10px;
+}
+
+/* El texto de la tarea */
+.kanban-card p {
+  margin: 0;
+  flex: 1; /* Ocupa todo el espacio disponible */
+  word-wrap: break-word; /* Si la palabra es muy larga, baja de línea */
+  text-align: left;
+  padding-top: 2px; /* Pequeño ajuste visual */
+}
+
+/* --- BOTONES DE ACCIÓN (Derecha) --- */
+.card-actions {
+  display: flex;
+  flex-direction: column; /* Apila los botones verticalmente */
+  gap: 5px;
+  min-width: 24px; /* Evita que se aplasten */
+}
+
+/* Estilos compartidos para los botones pequeños */
+.delete-btn, .edit-btn {
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background 0.2s;
+}
+
+/* Colores específicos */
+.delete-btn { 
+  background: #ff7675; 
+  color: white; 
+
+}
+
+.delete-btn:hover { 
+  background: #d63031; 
+}
+
+.edit-btn { 
+  background: #74b9ff; 
+  color: white; 
+}
+
+.edit-btn:hover { 
+  background: #0984e3; 
+}
+
+/* --- MODO EDICIÓN (Input dentro de la tarjeta) --- */
+.edit-mode {
+  display: flex;
+  width: 100%;
+  gap: 5px;
+  align-items: center;
+}
+
+.edit-mode input {
+  flex: 1;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  font-family: inherit;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 2px;
+}
+
+.save-btn { 
+  background: #55efc4; 
+  border: none; 
+  cursor: pointer; 
+  padding: 6px; 
+  border-radius: 3px; 
+  color: #fff; 
+}
+
+.cancel-btn { 
+  background: #b2bec3; 
+  border: none; cursor: 
+  pointer; padding: 6px; 
+  border-radius: 3px; 
+  color: #fff; 
+}
+/* Estilos Cotizaciones */
+
+.cotizaciones-container {
+  background: white; 
+  padding: 20px; 
+  border-radius: 8px; 
+  color: #2d3436
+}
+
+.quote-form { 
+  display: grid; 
+  grid-template-columns: 1fr 2fr 1fr auto; 
+  gap: 10px; 
+  margin-bottom: 20px; 
+}
+
+.quote-form input { 
+  padding: 8px; 
+  border: 1px solid #ddd; 
+  border-radius: 4px; 
+}
+
+.quote-table { 
+  width: 100%; 
+  border-collapse: collapse; 
+}
+
+.quote-table th, .quote-table td { 
+  border-bottom: 1px solid #eee; 
+  padding: 12px; 
+  text-align: left; 
+  color: #2d3436;
+}
+
+.quote-table th { 
+  background-color: #f8f9fa; 
+}
+
+.quote-form input {
+  color: #2d3436;
+  background-color: #fff;
+}
+
+.badge { 
+  padding: 4px 8px; 
+  border-radius: 12px; 
+  font-size: 0.85em; 
+  text-transform: uppercase; 
+  font-weight: bold; 
+}
+
+.badge.borrador { 
+  background-color: #ffeaa7; 
+  color: #d35400; 
+}
+
+.badge.aprobada { 
+  background-color: #55efc4; 
+  color: #00b894; 
+}
+
+.approve-btn { 
+  background-color: #6c5ce7; 
+  color: white; 
+  border: none; 
+  padding: 6px 12px; 
+  border-radius: 4px; 
+  cursor: pointer; 
+}
+
+.approve-btn:hover { 
+  background-color: #5f27cd; 
+}
+
+.pdf-btn {
+  background-color: #74b9ff;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.pdf-btn:hover {
+  background-color: #0984e3;
+}
+
+.delete-quote-btn {
+  background-color: #ff7675; /* Rojo suave */
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s;
+}
+
+.delete-quote-btn:hover {
+  background-color: #d63031; /* Rojo intenso al pasar el mouse */
+}
+
+@media (max-width: 768px) {
+
+  /* 1. Ajustar el contenedor principal */
+  .app-container {
+    width: 90%;      /* Usar casi todo el ancho */
+    padding: 10px;   /* Menos relleno */
+    margin-top: 20px;
+  }
+
+  /* 2. Navegación (Menu) */
+  nav {
+    flex-direction: column; /* Poner enlaces uno debajo del otro */
+    text-align: center;
+    gap: 10px;
+  }
+  
+  nav a {
+    display: block;
+    padding: 10px;
+    background-color: #fff; /* Fondo blanco para que parezcan botones */
+    border-radius: 5px;
+  }
+
+  /* 3. Tablero Kanban (Columnas verticales) */
+  .kanban-board {
+    flex-direction: column; /* Apilar columnas */
+  }
+
+  .kanban-column {
+    width: 100%; /* Ocupar todo el ancho */
+    margin-bottom: 20px; /* Espacio entre columnas */
+  }
+
+  /* 4. Formularios (Inputs grandes) */
+  .task-form, .quote-form {
+    flex-direction: column; /* Elementos verticales */
+    grid-template-columns: 1fr !important; /* Romper el grid de cotizaciones */
+    width: 100%;
+  }
+
+  .task-form input, .quote-form input {
+    width: 100%; /* Input ocupa todo el ancho */
+    box-sizing: border-box; /* Evita que el padding rompa el ancho */
+    margin-bottom: 10px;
+  }
+
+  .task-form button, .quote-form button {
+    width: 100%; /* Botón gigante fácil de tocar */
+  }
+
+  /* 5. Tablas (Scroll Horizontal) */
+  /* Esto requiere un pequeño cambio en el HTML de Cotizaciones.jsx, ver Paso 2 */
+  .table-wrapper {
+    overflow-x: auto; /* Permite deslizar la tabla con el dedo */
+    width: 100%;
+  }
+  
+  /* Ajustes visuales para la tabla en móvil */
+  .quote-table th, .quote-table td {
+    font-size: 0.9rem; /* Letra un poco más chica */
+    padding: 8px;
+  }
+}
