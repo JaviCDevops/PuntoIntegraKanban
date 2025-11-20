@@ -1,4 +1,3 @@
-// server/index.js
 const Quote = require('./models/Quote');
 const express = require('express');
 const mongoose = require('mongoose');
@@ -59,23 +58,52 @@ app.post('/api/quotes', async (req, res) => {
   }
 });
 
-app.put('/api/quotes/approve/:id', async (req, res) => {
+// --- ACTUALIZAR COTIZACIÓN (ESTADO, PXX, KANBAN Y PAGOS) ---
+app.put('/api/quotes/:id', async (req, res) => {
   try {
+    // 1. Recibimos "status" Y TAMBIÉN "payments" del cuerpo de la petición
+    const { status, payments } = req.body; 
+    
     const quote = await Quote.findById(req.params.id);
-    if (!quote) return res.status(404).json({ message: 'Cotización no encontrada' });
+    if (!quote) return res.status(404).json({ message: 'No encontrada' });
 
-    quote.status = 'aprobada';
-    await quote.save();
+    // --- LÓGICA DE ESTADOS Y PROYECTOS (PXX) ---
+    
+    // Si hay cambio de estatus a "ESPERA", guardamos fecha
+    if (status && status === '1-ESPERA RESPUESTA CLIENTE' && quote.status !== '1-ESPERA RESPUESTA CLIENTE') {
+      quote.fechaEnvio = new Date();
+    }
 
-    const newTask = new Task({
-      title: `${quote.clientName}: ${quote.description}`, 
-      status: 'pendiente'
-    });
-    await newTask.save();
+    // Si hay cambio a "ADJUDICADO" y no tiene código, generamos PXX y Tarea
+    if (status && status === '2-ADJUDICADO' && !quote.projectCode) {
+      const count = await Quote.countDocuments({ projectCode: { $exists: true } });
+      const nextNum = count + 1;
+      const formattedNum = nextNum < 10 ? `0${nextNum}` : nextNum;
+      quote.projectCode = `P${formattedNum}`;
 
-    res.json({ message: 'Cotización aprobada y tarea creada', quote });
+      // Crear Tarea Kanban
+      const Task = require('./models/Task');
+      const newTask = new Task({
+        title: `${quote.projectCode} - ${quote.clientName}: ${quote.description}`,
+        status: 'pendiente'
+      });
+      await newTask.save();
+    }
+
+    // Actualizamos el status si viene en la petición
+    if (status) quote.status = status;
+
+    // --- LÓGICA DE PAGOS (LA PARTE QUE FALTABA) ---
+    if (payments) {
+      quote.payments = payments; // <--- ESTO FALTABA: Guardar el array de pagos
+    }
+    // ---------------------------------------------
+
+    const updatedQuote = await quote.save();
+    res.json(updatedQuote);
+
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(400).json({ message: error.message });
   }
 });
 

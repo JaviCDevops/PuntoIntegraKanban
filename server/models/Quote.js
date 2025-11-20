@@ -1,13 +1,33 @@
 const mongoose = require('mongoose');
 
 const QuoteSchema = new mongoose.Schema({
-  clientName: { type: String, required: true },
-  description: String, 
-  amount: Number,      
+  area: String,           
+  clientName: String,     
+  description: String,    
+  netoUF: Number,         
+  fechaEnvio: Date,
+  projectCode: String,
+
+  payments: [{
+    percentage: Number,      
+    amount: Number,          
+    invoiceNumber: String,   
+    status: { 
+      type: String, 
+      enum: ['PENDIENTE', 'FACTURADO', 'PAGADO'], 
+      default: 'PENDIENTE'
+    }
+  }],
+
   status: { 
     type: String, 
-    enum: ['borrador', 'aprobada'], 
-    default: 'borrador' 
+    enum: [
+      '0-PENDIENTE DE ENVIO', 
+      '1-ESPERA RESPUESTA CLIENTE', 
+      '2-ADJUDICADO', 
+      '3-PERDIDO'
+    ], 
+    default: '0-PENDIENTE DE ENVIO' 
   },
   createdAt: { type: Date, default: Date.now }
 });

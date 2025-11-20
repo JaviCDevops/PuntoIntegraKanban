@@ -5,9 +5,13 @@ body {
   margin: 0; 
 }
 
-#root {
-  width: 100%; 
+button {
+  margin: 0;
+  padding: 0;
+  font-family: inherit;
 }
+
+#root { width: 100%; }
 
 .app-container { 
   padding: 20px; 
@@ -17,22 +21,41 @@ body {
 
 h1 { text-align: center; margin-bottom: 30px; }
 
-.task-form { 
+nav {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  background: #dfe6e9;
+  margin-bottom: 20px;
+  border-radius: 8px;
+}
+
+.task-form, .quote-form { 
   display: flex; 
   gap: 10px; 
   margin-bottom: 30px; 
   justify-content: center; 
 }
 
-.task-form input { 
+.quote-form {
+  display: grid; 
+  grid-template-columns: 1fr 2fr 1fr auto; 
+  gap: 10px; 
+}
+
+.task-form input, .quote-form input { 
   padding: 10px; 
-  width: 300px; 
   border-radius: 5px; 
   border: none; 
   outline: none;
+  color: #2d3436;
+  background-color: #fff;
 }
 
-.task-form button { 
+.task-form input { width: 300px; }
+.quote-form input { width: auto; border: 1px solid #ddd; }
+
+.task-form button, .quote-form button { 
   padding: 10px 20px; 
   background: #0984e3; 
   color: white; 
@@ -41,7 +64,7 @@ h1 { text-align: center; margin-bottom: 30px; }
   cursor: pointer; 
   font-weight: bold;
 }
-.task-form button:hover { background: #74b9ff; }
+.task-form button:hover, .quote-form button:hover { background: #74b9ff; }
 
 .kanban-board {
   display: flex;
@@ -67,9 +90,7 @@ h1 { text-align: center; margin-bottom: 30px; }
   margin-bottom: 10px;
 }
 
-.column-content {
-  min-height: 100px; 
-}
+.column-content { min-height: 100px; }
 
 .kanban-card {
   background: white;
@@ -84,298 +105,178 @@ h1 { text-align: center; margin-bottom: 30px; }
   gap: 10px;
 }
 
-.kanban-card p {
-  margin: 0;
-  flex: 1; 
-  word-wrap: break-word; 
-  text-align: left;
-  padding-top: 2px;
+.kanban-card p { margin: 0; flex: 1; word-wrap: break-word; text-align: left; padding-top: 2px; }
+.card-actions { display: flex; flex-direction: column; gap: 5px; min-width: 24px; }
+
+.delete-btn, .edit-btn, .action-btn {
+  width: 24px; height: 24px; border: none; border-radius: 4px; cursor: pointer;
+  font-size: 12px; display: flex; justify-content: center; align-items: center;
+  transition: background 0.2s;
 }
 
-.card-actions {
-  display: flex;
-  flex-direction: column; 
-  gap: 5px;
-  min-width: 24px; 
+.action-btn { font-size: 1.2rem; width: auto; height: auto; padding: 8px 12px; }
+
+.delete-btn, .delete-quote-btn, .delete-btn-table { background: #ff7675; color: white; }
+.delete-btn:hover, .delete-quote-btn:hover, .delete-btn-table:hover { background: #d63031; }
+
+.edit-btn, .pdf-btn { background: #74b9ff; color: white; }
+.edit-btn:hover, .pdf-btn:hover { background: #0984e3; }
+
+.approve-btn { background-color: #6c5ce7; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
+.approve-btn:hover { background-color: #5f27cd; }
+
+.delete-quote-btn, .pdf-btn, .delete-btn-table { border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+
+.icon-btn {
+  border: none; width: 36px; height: 36px; border-radius: 6px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
+}
+.eye-btn { background-color: #636e72; color: white; }
+
+.edit-mode { display: flex; width: 100%; gap: 5px; align-items: center; }
+.edit-mode input { flex: 1; padding: 5px; border: 1px solid #ccc; border-radius: 3px; font-family: inherit; }
+.edit-actions { display: flex; gap: 2px; }
+.save-btn { background: #55efc4; border: none; cursor: pointer; padding: 6px; border-radius: 3px; color: #fff; }
+.cancel-btn { background: #b2bec3; border: none; cursor: pointer; padding: 6px; border-radius: 3px; color: #fff; }
+
+.cotizaciones-container { background: white; padding: 20px; border-radius: 8px; color: #2d3436; }
+
+.quote-table, .project-table { 
+  width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; color: #2d3436; 
 }
 
-.delete-btn, .edit-btn {
-  width: 24px;
-  height: 24px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 12px;
+.quote-table th, .quote-table td, .project-table th, .project-table td { 
+  border-bottom: 1px solid #eee; padding: 12px; text-align: left; color: #2d3436; 
+  vertical-align: middle; 
+}
+
+.quote-table th:last-child, 
+.quote-table td:last-child,
+.project-table th:last-child,
+.project-table td:last-child {
+  min-width: 130px;
+}
+
+.actions-cell {
   display: flex;
+  gap: 10px; 
   justify-content: center;
   align-items: center;
-  transition: background 0.2s;
+  height: 100%;
+  padding: 15px !important; 
 }
 
-.delete-btn { 
-  background: #ff7675; 
-  color: white; 
-
+.quote-table th, .project-table th { 
+  background-color: #dfe6e9; color: #2d3436; font-weight: 800; text-transform: uppercase; font-size: 0.85rem; 
 }
 
-.delete-btn:hover { 
-  background: #d63031; 
-}
+.badge { padding: 4px 8px; border-radius: 12px; font-size: 0.85em; text-transform: uppercase; font-weight: bold; }
+.status-select { padding: 8px; border-radius: 5px; border: 1px solid #ccc; color: white; font-weight: bold; width: 100%; cursor: pointer; }
+.status-select option { background-color: white; color: #333; }
 
-.edit-btn { 
-  background: #74b9ff; 
-  color: white; 
-}
+.status-0 { background-color: #e67e22; border-color: #d35400; }
+.status-1 { background-color: #00cec9; border-color: #00b894; }
+.status-2 { background-color: #0984e3; border-color: #74b9ff; }
+.status-3 { background-color: #d63031; border-color: #c0392b; }
 
-.edit-btn:hover { 
-  background: #0984e3; 
-}
+.pay-badge { padding: 5px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; display: inline-block; width: 100%; text-align: center; }
+.pay-pending { background-color: #dfe6e9; color: #636e72; }
+.pay-billed { background-color: #c7ecee; color: #22a6b3; }
+.pay-partial { background-color: #ffeaa7; color: #d35400; }
+.pay-success { background-color: #55efc4; color: #00b894; }
 
-.edit-mode {
-  display: flex;
-  width: 100%;
-  gap: 5px;
-  align-items: center;
-}
+.project-code { font-weight: 900; color: #0984e3; font-size: 1.1rem; letter-spacing: 1px; }
+.status-running { background-color: #0984e3; color: white; padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; }
 
-.edit-mode input {
-  flex: 1;
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  font-family: inherit;
-}
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+.modal-content { background: white; padding: 25px; border-radius: 10px; width: 90%; max-width: 800px; max-height: 90vh; overflow-y: auto; box-shadow: 0 5px 15px rgba(0,0,0,0.3); color: #2d3436;}
+.modal-header-info { background: #f1f2f6; padding: 15px; border-radius: 8px; margin: 15px 0; display: flex; gap: 20px; }
+.payment-controls { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+.payment-row { display: flex; flex-wrap: wrap; gap: 15px; align-items: flex-end; margin-bottom: 15px; padding: 10px; border: 1px solid #eee; border-radius: 8px; background: #fafafa; }
+.payment-index { font-weight: bold; color: #0984e3; min-width: 60px; padding-bottom: 8px;}
+.input-group { display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 80px; }
+.input-group.large { min-width: 150px; flex: 2; }
+.input-group input, .input-group select { padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+.status-paid { background-color: #d4edda; color: #155724; border-color: #c3e6cb !important; font-weight: bold; }
+.status-pending { background-color: #fff3cd; color: #856404; border-color: #ffeeba !important; }
+.status-billed { background-color: #c7ecee; color: #22a6b3; border-color: #7ed6df !important; font-weight: bold; }
+.save-btn-modal { width: 100%; padding: 15px; background: #0984e3; color: white; border: none; border-radius: 5px; font-size: 1.1rem; cursor: pointer; margin-top: 10px; }
+.save-btn-modal:hover { background: #74b9ff; }
 
-.edit-actions {
-  display: flex;
-  gap: 2px;
-}
-
-.save-btn { 
-  background: #55efc4; 
-  border: none; 
-  cursor: pointer; 
-  padding: 6px; 
-  border-radius: 3px; 
-  color: #fff; 
-}
-
-.cancel-btn { 
-  background: #b2bec3; 
-  border: none; cursor: 
-  pointer; padding: 6px; 
-  border-radius: 3px; 
-  color: #fff; 
-}
-
-.cotizaciones-container {
-  background: white; 
-  padding: 20px; 
-  border-radius: 8px; 
-  color: #2d3436
-}
-
-.quote-form { 
-  display: grid; 
-  grid-template-columns: 1fr 2fr 1fr auto; 
-  gap: 10px; 
-  margin-bottom: 20px; 
-}
-
-.quote-form input { 
-  padding: 8px; 
-  border: 1px solid #ddd; 
-  border-radius: 4px; 
-}
-
-.quote-table { 
-  width: 100%; 
-  border-collapse: collapse; 
-}
-
-.quote-table th, .quote-table td { 
-  border-bottom: 1px solid #eee; 
-  padding: 12px; 
-  text-align: left; 
-  color: #2d3436;
-}
-
-.quote-table th { 
-  background-color: #f8f9fa; 
-}
-
-.quote-form input {
-  color: #2d3436;
-  background-color: #fff;
-}
-
-.badge { 
-  padding: 4px 8px; 
-  border-radius: 12px; 
-  font-size: 0.85em; 
-  text-transform: uppercase; 
-  font-weight: bold; 
-}
-
-.badge.borrador { 
-  background-color: #ffeaa7; 
-  color: #d35400; 
-}
-
-.badge.aprobada { 
-  background-color: #55efc4; 
-  color: #00b894; 
-}
-
-.approve-btn { 
-  background-color: #6c5ce7; 
-  color: white; 
-  border: none; 
-  padding: 6px 12px; 
-  border-radius: 4px; 
-  cursor: pointer; 
-}
-
-.approve-btn:hover { 
-  background-color: #5f27cd; 
-}
-
-.pdf-btn {
-  background-color: #74b9ff;
-  color: white;
-  border: none;
-  padding: 6px 10px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.pdf-btn:hover {
-  background-color: #0984e3;
-}
-
-.delete-quote-btn {
-  background-color: #ff7675;
-  color: white;
-  border: none;
-  padding: 6px 10px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background 0.2s;
-}
-
-.delete-quote-btn:hover {
-  background-color: #d63031;
-}
+.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
+.header-actions { display: flex; gap: 10px; align-items: center; }
+.btn-new-quote { display: flex; align-items: center; gap: 8px; padding: 10px 20px; background: #00b894; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; white-space: nowrap; }
+.btn-new-quote:hover { background: #00cec9; }
+.new-quote-link { text-decoration: none; }
 
 @media (max-width: 768px) {
-
-  .app-container { 
-    width: 95%; 
-    padding: 10px; 
-    margin-top: 10px; 
-  }
-
-  nav { 
-    flex-direction: column; 
-    gap: 10px; 
-    text-align: center; 
-  }
-
-  nav a { 
-    display: block; 
-    padding: 12px; 
-    background: #fff; 
-    border-radius: 8px; 
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-  }
-
   
-  .task-form, .quote-form { 
-    display: flex;
-    flex-direction: column; 
-    width: 100%; 
-    gap: 15px;
-    background-color: #f8f9fa;
-    padding: 15px;
-    border-radius: 10px;
-    box-sizing: border-box;
-    margin-bottom: 20px;
-  }
+  .page-header { flex-direction: column; gap: 10px; text-align: center; }
+  .header-actions { width: 100%; justify-content: center; gap: 10px; }
+  .btn-new-quote { width: 100%; justify-content: center; }
+  .new-quote-link { flex: 1; }
+  .eye-btn { width: 44px; height: 44px; }
 
-  .task-form input, .quote-form input { 
-    width: 100%; 
-    box-sizing: border-box; 
-    padding: 12px;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-  }
+  .app-container { width: 95%; padding: 10px; margin-top: 10px; }
+  nav { flex-direction: column; gap: 10px; text-align: center; }
+  nav a { display: block; padding: 12px; background: #fff; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
 
-  .task-form button, .quote-form button { 
-    width: 100%; 
-    padding: 12px;
-    font-size: 1.1rem;
-    margin-top: 5px;
-    font-weight: bold;
-  }
+  .task-form, .quote-form { display: flex; flex-direction: column; width: 100%; gap: 15px; background-color: #f8f9fa; padding: 15px; border-radius: 10px; box-sizing: border-box; margin-bottom: 20px; }
+  .task-form input, .quote-form input { width: 100%; box-sizing: border-box; padding: 12px; font-size: 1rem; border: 1px solid #ccc; border-radius: 6px; }
+  .task-form button, .quote-form button { width: 100%; padding: 12px; margin-top: 5px; font-weight: bold; }
 
   .kanban-board { flex-direction: column; }
   .kanban-column { width: 100%; margin-bottom: 20px; }
 
-  .quote-table thead { display: none; }
-
-  .quote-table, .quote-table tbody, .quote-table tr, .quote-table td {
-    display: block;
-    width: 100%;
-    box-sizing: border-box;
+  .quote-table th:last-child, .quote-table td:last-child, .project-table th:last-child, .project-table td:last-child {
+    width: 100%; min-width: auto;
   }
 
-  .quote-table tr {
-    margin-bottom: 20px;
-    border: 1px solid #e0e0e0;
-    border-radius: 12px;
-    background: #fff;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    overflow: hidden;
+  .project-table thead, .quote-table thead { display: none; }
+
+  .project-table, .quote-table, .project-table tbody, .quote-table tbody, .project-table tr, .quote-table tr, .project-table td, .quote-table td {
+    display: block; width: 100%; box-sizing: border-box;
   }
 
-  .quote-table td {
-    display: flex;
-    flex-direction: column; 
-    align-items: flex-start; 
-    text-align: left;
-    padding: 15px 20px; 
-    border-bottom: 1px solid #f0f0f0;
+  .project-table tr, .quote-table tr {
+    margin-bottom: 20px; background: #fff; border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05); overflow: hidden; border: 1px solid #e0e0e0;
   }
 
-  .quote-table td:last-child { border-bottom: none; }
+  .project-table td, .quote-table td {
+    display: flex; flex-direction: column; align-items: flex-start; text-align: left;
+    padding: 10px 20px; border-bottom: 1px solid #f0f0f0;
+  }
+  .project-table td:last-child, .quote-table td:last-child { border-bottom: none; }
 
-  .quote-table td::before {
-    margin-bottom: 6px; 
-    font-weight: 800;
-    font-size: 0.75rem; 
-    text-transform: uppercase;
-    color: #636e72; 
-    letter-spacing: 1px;
+  .project-table td::before, .quote-table td::before {
+    margin-bottom: 5px; font-weight: 800; font-size: 0.75rem; text-transform: uppercase; color: #636e72; letter-spacing: 1px;
   }
 
-  .quote-table td:nth-of-type(1):before { content: "Cliente"; color: #0984e3; }
-  .quote-table td:nth-of-type(2):before { content: "Descripción"; }
-  .quote-table td:nth-of-type(3):before { content: "Monto"; }
-  .quote-table td:nth-of-type(4):before { content: "Estado"; }
-  .quote-table td:nth-of-type(5):before { display: none; }
+  .project-table tr { border-left: 6px solid #0984e3; }
+  .project-table td:nth-of-type(1):before { content: "Código Proyecto"; color: #0984e3; }
+  .project-table td:nth-of-type(1) { font-size: 1.5rem; font-weight: bold; color: #2d3436; }
+  .project-table td:nth-of-type(2):before { content: "Cliente"; }
+  .project-table td:nth-of-type(3):before { content: "Detalle"; }
+  .project-table td:nth-of-type(4):before { content: "Estado Pago"; }
+  .project-table td:nth-of-type(5):before { content: "Gestión"; }
 
-  .quote-table td:nth-of-type(5) {
-    padding: 15px;
-    background-color: #f8f9fa;
-    gap: 12px;
-  }
+  .quote-table td:nth-of-type(1):before { content: "Area"; color: #0984e3; }
+  .quote-table td:nth-of-type(2):before { content: "Cliente"; }
+  .quote-table td:nth-of-type(3):before { content: "Detalle"; }
+  .quote-table td:nth-of-type(4):before { content: "Neto (UF)"; }
+  .quote-table td:nth-of-type(5):before { content: "IVA (UF)"; }
+  .quote-table td:nth-of-type(6):before { content: "Total (UF)"; }
+  .quote-table td:nth-of-type(7):before { content: "Fecha Envío"; }
+  .quote-table td:nth-of-type(8):before { content: "Status Presupuesto"; }
+  .quote-table td:nth-of-type(9):before { content: "Status Pago"; }
   
-  .quote-table td:nth-of-type(5) button {
-    width: 100%; 
-    margin: 0 !important;
-    padding: 12px;
+  .quote-table td:nth-of-type(10):before { display: none; }
+  .quote-table td:nth-of-type(10) {
+    background-color: #f8f9fa; flex-direction: row; justify-content: center; gap: 15px; padding: 15px; display: flex;
   }
+  .quote-table td:nth-of-type(10) button { width: auto; flex: 1; padding: 12px; margin: 0 !important; }
+
+  .payment-row { flex-direction: column; align-items: stretch; }
+  .modal-header-info { flex-direction: column; gap: 5px; }
 }
