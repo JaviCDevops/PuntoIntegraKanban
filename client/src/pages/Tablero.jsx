@@ -21,7 +21,6 @@ function Tablero() {
 
   const fetchTasks = async () => {
     try {
-      // CORRECCIÓN 1: Agregar /tasks
       const res = await axios.get(`${API_URL}/tasks`);
       setTasks(res.data);
     } catch (error) { console.error(error); }
@@ -30,7 +29,6 @@ function Tablero() {
   const handleCreateTask = async (e) => {
     e.preventDefault();
     if (!newTaskTitle.trim()) return;
-    // CORRECCIÓN 2: Agregar /tasks
     await axios.post(`${API_URL}/tasks`, { title: newTaskTitle });
     setNewTaskTitle('');
     fetchTasks();
@@ -38,7 +36,6 @@ function Tablero() {
 
   const handleDelete = async (id) => {
     if (window.confirm('¿Borrar?')) {
-      // CORRECCIÓN 3: Agregar /tasks antes del ID
       await axios.delete(`${API_URL}/tasks/${id}`);
       setTasks(tasks.filter(t => t._id !== id));
     }
@@ -51,7 +48,6 @@ function Tablero() {
 
   const saveEdit = async (id) => {
     try {
-      // CORRECCIÓN 4: Agregar /tasks antes del ID
       await axios.put(`${API_URL}/tasks/${id}`, { title: editText });
       
       const updatedTasks = tasks.map(t => 
@@ -76,7 +72,6 @@ function Tablero() {
     setTasks(updatedTasks);
 
     try {
-      // CORRECCIÓN 5: Agregar /tasks antes del ID del elemento arrastrado
       await axios.put(`${API_URL}/tasks/${draggableId}`, { status: newStatus });
     } catch (error) {
       console.error("Error al mover:", error);

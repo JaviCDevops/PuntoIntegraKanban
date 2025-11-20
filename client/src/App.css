@@ -1,4 +1,3 @@
-/* Reinicio básico */
 body { 
   font-family: 'Segoe UI', sans-serif; 
   background-color: #2d3436; 
@@ -7,7 +6,7 @@ body {
 }
 
 #root {
-  width: 100%; /* Asegura que ocupe todo el ancho */
+  width: 100%; 
 }
 
 .app-container { 
@@ -18,7 +17,6 @@ body {
 
 h1 { text-align: center; margin-bottom: 30px; }
 
-/* --- FORMULARIO --- */
 .task-form { 
   display: flex; 
   gap: 10px; 
@@ -45,7 +43,6 @@ h1 { text-align: center; margin-bottom: 30px; }
 }
 .task-form button:hover { background: #74b9ff; }
 
-/* --- TABLERO (Columnas) --- */
 .kanban-board {
   display: flex;
   gap: 20px;
@@ -74,40 +71,34 @@ h1 { text-align: center; margin-bottom: 30px; }
   min-height: 100px; 
 }
 
-/* --- TARJETAS (Tareas) --- */
 .kanban-card {
   background: white;
   color: #2d3436;
-  padding: 10px 15px; /* Ajustado para mejor espacio */
+  padding: 10px 15px;
   margin-bottom: 10px;
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  
-  /* Flexbox para alinear texto a la izq y botones a la der */
   display: flex;
   justify-content: space-between; 
   align-items: flex-start; 
   gap: 10px;
 }
 
-/* El texto de la tarea */
 .kanban-card p {
   margin: 0;
-  flex: 1; /* Ocupa todo el espacio disponible */
-  word-wrap: break-word; /* Si la palabra es muy larga, baja de línea */
+  flex: 1; 
+  word-wrap: break-word; 
   text-align: left;
-  padding-top: 2px; /* Pequeño ajuste visual */
+  padding-top: 2px;
 }
 
-/* --- BOTONES DE ACCIÓN (Derecha) --- */
 .card-actions {
   display: flex;
-  flex-direction: column; /* Apila los botones verticalmente */
+  flex-direction: column; 
   gap: 5px;
-  min-width: 24px; /* Evita que se aplasten */
+  min-width: 24px; 
 }
 
-/* Estilos compartidos para los botones pequeños */
 .delete-btn, .edit-btn {
   width: 24px;
   height: 24px;
@@ -121,7 +112,6 @@ h1 { text-align: center; margin-bottom: 30px; }
   transition: background 0.2s;
 }
 
-/* Colores específicos */
 .delete-btn { 
   background: #ff7675; 
   color: white; 
@@ -141,7 +131,6 @@ h1 { text-align: center; margin-bottom: 30px; }
   background: #0984e3; 
 }
 
-/* --- MODO EDICIÓN (Input dentro de la tarjeta) --- */
 .edit-mode {
   display: flex;
   width: 100%;
@@ -178,7 +167,6 @@ h1 { text-align: center; margin-bottom: 30px; }
   border-radius: 3px; 
   color: #fff; 
 }
-/* Estilos Cotizaciones */
 
 .cotizaciones-container {
   background: white; 
@@ -267,7 +255,7 @@ h1 { text-align: center; margin-bottom: 30px; }
 }
 
 .delete-quote-btn {
-  background-color: #ff7675; /* Rojo suave */
+  background-color: #ff7675;
   color: white;
   border: none;
   padding: 6px 10px;
@@ -278,12 +266,11 @@ h1 { text-align: center; margin-bottom: 30px; }
 }
 
 .delete-quote-btn:hover {
-  background-color: #d63031; /* Rojo intenso al pasar el mouse */
+  background-color: #d63031;
 }
 
 @media (max-width: 768px) {
 
-  /* 1. AJUSTES GENERALES */
   .app-container { 
     width: 95%; 
     padding: 10px; 
@@ -304,16 +291,16 @@ h1 { text-align: center; margin-bottom: 30px; }
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
   }
 
-  /* 2. FORMULARIOS (Aquí está lo que pediste: Nombre, Desc, Monto, Botón) */
+  
   .task-form, .quote-form { 
     display: flex;
-    flex-direction: column; /* Elementos uno debajo del otro */
+    flex-direction: column; 
     width: 100%; 
-    gap: 15px; /* Espacio entre inputs */
+    gap: 15px;
     background-color: #f8f9fa;
     padding: 15px;
     border-radius: 10px;
-    box-sizing: border-box; /* Para que el padding no rompa el ancho */
+    box-sizing: border-box;
     margin-bottom: 20px;
   }
 
@@ -334,11 +321,9 @@ h1 { text-align: center; margin-bottom: 30px; }
     font-weight: bold;
   }
 
-  /* 3. KANBAN (Columnas verticales) */
   .kanban-board { flex-direction: column; }
   .kanban-column { width: 100%; margin-bottom: 20px; }
 
-  /* 4. TABLA -> TARJETAS (Diseño Vertical Limpio) */
   .quote-table thead { display: none; }
 
   .quote-table, .quote-table tbody, .quote-table tr, .quote-table td {
@@ -347,7 +332,6 @@ h1 { text-align: center; margin-bottom: 30px; }
     box-sizing: border-box;
   }
 
-  /* La Tarjeta */
   .quote-table tr {
     margin-bottom: 20px;
     border: 1px solid #e0e0e0;
@@ -357,7 +341,6 @@ h1 { text-align: center; margin-bottom: 30px; }
     overflow: hidden;
   }
 
-  /* Cada Dato (Título arriba, Texto abajo) */
   .quote-table td {
     display: flex;
     flex-direction: column; 
@@ -369,7 +352,6 @@ h1 { text-align: center; margin-bottom: 30px; }
 
   .quote-table td:last-child { border-bottom: none; }
 
-  /* Títulos de los datos (Cliente, Desc, etc) */
   .quote-table td::before {
     margin-bottom: 6px; 
     font-weight: 800;
@@ -379,14 +361,12 @@ h1 { text-align: center; margin-bottom: 30px; }
     letter-spacing: 1px;
   }
 
-  /* Asignación de nombres a las etiquetas */
   .quote-table td:nth-of-type(1):before { content: "Cliente"; color: #0984e3; }
   .quote-table td:nth-of-type(2):before { content: "Descripción"; }
   .quote-table td:nth-of-type(3):before { content: "Monto"; }
   .quote-table td:nth-of-type(4):before { content: "Estado"; }
-  .quote-table td:nth-of-type(5):before { display: none; } /* Ocultar titulo en acciones */
+  .quote-table td:nth-of-type(5):before { display: none; }
 
-  /* Área de Botones */
   .quote-table td:nth-of-type(5) {
     padding: 15px;
     background-color: #f8f9fa;

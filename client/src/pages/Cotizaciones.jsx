@@ -16,14 +16,12 @@ function Cotizaciones() {
   useEffect(() => { fetchQuotes(); }, []);
 
   const fetchQuotes = async () => {
-    // CORRECCIÓN 1: Usar backticks (`), cambiar /tasks por /quotes
     const res = await axios.get(`${API_URL}/quotes`);
     setQuotes(res.data);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // CORRECCIÓN 2: Agregar /quotes al final
     await axios.post(`${API_URL}/quotes`, formData);
     setFormData({ clientName: '', description: '', amount: '' }); 
     fetchQuotes();
@@ -32,7 +30,6 @@ function Cotizaciones() {
   const handleApprove = async (id) => {
     if (!window.confirm('Al aprobar, se creará una tarea en el tablero. ¿Continuar?')) return;
     try {
-      // CORRECCIÓN 3: La ruta correcta es /quotes/approve
       await axios.put(`${API_URL}/quotes/approve/${id}`);
       alert("¡Cotización Aprobada! Tarea enviada al Kanban.");
       fetchQuotes();
@@ -45,7 +42,6 @@ function Cotizaciones() {
     if (!window.confirm("¿Estás seguro de eliminar esta cotización?")) return;
 
     try {
-      // CORRECCIÓN 4: Agregar /quotes antes del ID
       await axios.delete(`${API_URL}/quotes/${id}`);
       setQuotes(quotes.filter(q => q._id !== id));
     } catch (error) {
@@ -53,7 +49,6 @@ function Cotizaciones() {
     }
   };
 
-  // ... La función generatePDF y el return están perfectos, no cambian ...
   const generatePDF = (quote) => {
     const doc = new jsPDF();
     doc.setFontSize(20);
@@ -83,7 +78,6 @@ function Cotizaciones() {
 
   return (
     <div className="cotizaciones-container">
-      {/* ... Aquí envuelve la tabla en el div para responsive si no lo has hecho ... */}
       <div className="table-wrapper"> 
           <h2>Módulo de Cotizaciones</h2>
           <form onSubmit={handleSubmit} className="quote-form">
