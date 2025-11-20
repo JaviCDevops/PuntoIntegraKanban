@@ -1,15 +1,15 @@
-Sistema ERP & Gestión de Proyectos (MERN Stack)
+ Sistema ERP & Gestión de Proyectos (MERN Stack)
 
 Plataforma web integral para la gestión operativa y comercial de la empresa. Este sistema unifica el flujo de trabajo desde la cotización inicial hasta la ejecución del proyecto, incluyendo control financiero y seguimiento de tareas mediante Kanban.
 
-Demo Online
+ Demo Online
 
-Frontend: https://puntointegrakanban.netlify.app/cotizaciones
-Backend: https://puntointegrakanban.onrender.com
+Frontend: [[Tu Link de Netlify aquí]](https://puntointegrakanban.netlify.app/cotizaciones)
+Backend: [[Tu Link de Render aquí]](https://puntointegrakanban.onrender.com/)
 
-Módulos y Funcionalidades
+ Módulos y Funcionalidades
 
-1. Módulo de Cotizaciones (Presupuestos)
+ Módulo de Cotizaciones (Presupuestos)
 
 Sistema avanzado para la creación y seguimiento de propuestas comerciales.
 
@@ -35,7 +35,7 @@ Estados Visuales:
 
 Privacidad: Botón para ocultar montos sensibles en reuniones.
 
-2. Gestión de Proyectos (PXX)
+2.  Gestión de Proyectos (PXX)
 
 Módulo exclusivo para obras adjudicadas.
 
@@ -55,7 +55,7 @@ Seguimiento de Nº de Factura y estados: Pendiente, Facturado, Pagado.
 
 Indicadores visuales de progreso de pago en la tabla principal.
 
-3. Tablero Kanban
+3.  Tablero Kanban
 
 Gestión operativa de tareas con funcionalidad "Drag & Drop".
 
@@ -73,7 +73,7 @@ Las tablas complejas se transforman en tarjetas verticales ("Cards") en celulare
 
 Botones y controles optimizados para pantallas táctiles.
 
-Tecnologías Utilizadas
+ Tecnologías Utilizadas
 
 Frontend (Cliente)
 
@@ -97,7 +97,7 @@ MongoDB Atlas: Base de datos NoSQL en la nube.
 
 Mongoose: Modelado de datos (Schemas con validaciones).
 
-Instalación Local
+ Instalación Local
 
 Sigue estos pasos para correr el proyecto en tu computador:
 
