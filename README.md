@@ -4,8 +4,8 @@ Plataforma web integral para la gestión operativa y comercial de la empresa. Es
 
  Demo Online
 
-Frontend: [[Tu Link de Netlify aquí]](https://puntointegrakanban.netlify.app/cotizaciones)
-Backend: [[Tu Link de Render aquí]](https://puntointegrakanban.onrender.com/)
+Frontend: [Front]](https://puntointegrakanban.netlify.app/cotizaciones)
+Backend: [[Back]](https://puntointegrakanban.onrender.com/)
 
  Módulos y Funcionalidades
 
