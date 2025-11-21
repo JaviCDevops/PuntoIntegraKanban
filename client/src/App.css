@@ -226,6 +226,86 @@ nav {
   cursor: pointer;
 }
 
+.swimlane-board {
+  display: flex;
+  flex-direction: column;
+  overflow-x: auto;
+}
+
+/* Encabezados de Columna */
+.swimlane-header {
+  display: flex;
+  min-width: fit-content;
+}
+
+.swimlane-corner {
+  min-width: 200px; /* Ancho del título de la fila */
+  background: transparent;
+}
+
+.swimlane-col-header {
+  flex: 1;
+  min-width: 280px;
+  padding: 10px;
+  background: #dfe6e9;
+  margin: 0 5px;
+  border-radius: 5px 5px 0 0;
+  font-weight: bold;
+  text-align: center;
+  color: #2d3436;
+  text-transform: uppercase;
+}
+
+/* Fila Completa */
+.swimlane-row {
+  display: flex;
+  min-width: fit-content;
+  border-bottom: 2px solid #b2bec3;
+  background: #f4f6f8; /* Color de fondo de la pista */
+}
+
+/* Encabezado de Fila (Izquierda) */
+.swimlane-row-header {
+  min-width: 200px;
+  width: 200px;
+  padding: 15px;
+  background: #fff;
+  border-right: 2px solid #dfe6e9;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.swimlane-row-header h3 {
+  margin: 0 0 10px 0;
+  font-size: 1rem;
+  color: #0984e3;
+  text-align: left;
+}
+
+.quick-add input {
+  width: 100%;
+  padding: 8px;
+  font-size: 0.85rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+/* Celda (Intersección) */
+.swimlane-cell {
+  flex: 1;
+  min-width: 280px;
+  padding: 10px;
+  margin: 0 5px;
+  background: rgba(255,255,255,0.5);
+  border-left: 1px dashed #ccc;
+  min-height: 150px; /* Altura mínima de la fila */
+}
+
+.swimlane-cell.dragging-over {
+  background-color: #e3f2fd; /* Azulito claro al arrastrar encima */
+}
+
 @media (max-width: 768px) {
   
   .page-header { flex-direction: column; gap: 10px; text-align: center; }
@@ -296,4 +376,39 @@ nav {
 
   .payment-row { flex-direction: column; align-items: stretch; }
   .modal-header-info { flex-direction: column; gap: 5px; }
+.swimlane-header { display: none; } /* Ocultar headers arriba en móvil */
+  
+  .swimlane-row {
+    flex-direction: column;
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .swimlane-row-header {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #eee;
+    background: #dfe6e9;
+  }
+
+  .swimlane-cell {
+    width: 100%;
+    border-left: none;
+    border-bottom: 1px solid #eee;
+    min-height: 100px;
+    /* Truco: Mostrar el nombre de la columna dentro de la celda en móvil */
+    position: relative;
+    padding-top: 30px;
+  }
+
+  .swimlane-cell::before {
+    content: "Tarea"; /* Idealmente dinámico, pero complejo en CSS puro */
+    position: absolute;
+    top: 5px; left: 10px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    color: #999;
+  }
 }

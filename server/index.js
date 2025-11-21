@@ -141,17 +141,28 @@ app.delete('/api/boards/:id', verifyToken, async (req, res) => {
 app.get('/api/tasks/board/:boardId', verifyToken, async (req, res) => {
   try {
     const { boardId } = req.params;
-    if (!boardId || boardId === 'undefined' || !ObjectId.isValid(boardId)) return res.status(400).json({msg: 'ID invalido'});
+    if (!boardId || boardId === 'undefined' || !ObjectId.isValid(boardId)) {
+      return res.status(400).json({ message: 'ID inválido' });
+    }
     const tasks = await Task.find({ boardId }).sort({ createdAt: -1 });
     res.json(tasks);
   } catch (error) { res.status(500).json({error: error.message}); }
 });
 app.post('/api/tasks', verifyToken, async (req, res) => {
-  try { const newTask = new Task(req.body); await newTask.save(); res.json(newTask); } 
-  catch (e) { res.status(400).json({message: e.message}); }
+  try {
+    const newTask = new Task(req.body); // req.body trae { title, boardId, status, rowId }
+    await newTask.save();
+    res.json(newTask);
+  } catch (error) { res.status(400).json({message: error.message}); }
 });
+
 app.put('/api/tasks/:id', verifyToken, async (req, res) => {
-  try { await Task.findByIdAndUpdate(req.params.id, req.body); res.json({msg:"ok"}); } catch (e) { res.status(500).send(e); }
+  try { 
+    // req.body puede traer { title, status, rowId }
+    await Task.findByIdAndUpdate(req.params.id, req.body); 
+    res.json({msg:"ok"}); 
+  } 
+  catch (e) { res.status(500).json({error: e.message}); }
 });
 app.delete('/api/tasks/:id', verifyToken, async (req, res) => {
   try { await Task.findByIdAndDelete(req.params.id); res.json({msg:"ok"}); } catch (e) { res.status(500).send(e); }

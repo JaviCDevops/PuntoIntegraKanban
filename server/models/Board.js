@@ -4,12 +4,22 @@ const BoardSchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: String,
   
-  // Array de IDs de usuarios que tienen acceso
-  members: [{ 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'User' 
+  // COLUMNAS (Vertical)
+  columns: [{
+    id: String,
+    title: String,
+    color: String
   }],
-  
+
+  // FILAS (Horizontal - Swimlanes) --- NUEVO
+  rows: [{
+    id: String,
+    title: String,
+    color: String
+  }],
+  // --------------------------------
+
+  members: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   createdAt: { type: Date, default: Date.now }
 });
 
