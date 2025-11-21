@@ -28,7 +28,7 @@ function Proyectos() {
 
   return (
     <div className="app-container">
-      <h2 style={{textAlign: 'center', marginBottom: '20px'}}>🏗️ Proyectos en Curso</h2>
+      <h2 style={{textAlign: 'center', marginBottom: '20px'}}> Proyectos en Curso</h2>
 
       {proyectos.length === 0 ? (
         <p style={{textAlign: 'center', color: '#636e72'}}>No hay proyectos adjudicados aún.</p>
@@ -74,7 +74,7 @@ function Proyectos() {
                           borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold'
                         }}
                       >
-                        💰 Gestionar Pagos
+                         Gestionar Pagos
                       </button>
                     </td>
                   </tr>

@@ -151,7 +151,7 @@ function ModalPagos({ project, onClose, onUpdate }) {
         </div>
 
         <div className="modal-footer">
-          <button className="save-btn-modal" onClick={handleSave}>💾 Guardar Información de Pagos</button>
+          <button className="save-btn-modal" onClick={handleSave}> Guardar Información de Pagos</button>
         </div>
       </div>
     </div>

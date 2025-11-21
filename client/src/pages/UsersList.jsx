@@ -29,14 +29,14 @@ function UsersList() {
 
   const formatRole = (role) => {
     switch(role) {
-      case 'admin': return '👑 Administrador';
-      default: return '👤 Usuario Estándar';
+      case 'admin': return ' Administrador';
+      default: return ' Usuario Estándar';
     }
   };
 
   return (
     <div className="app-container">
-      <h2 style={{textAlign: 'center', marginBottom: '20px'}}>👥 Usuarios del Sistema</h2>
+      <h2 style={{textAlign: 'center', marginBottom: '20px'}}> Usuarios del Sistema</h2>
       
       {loading ? (
         <p style={{textAlign: 'center'}}>Cargando...</p>

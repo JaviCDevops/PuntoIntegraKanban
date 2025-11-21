@@ -87,7 +87,7 @@ function AdminPanel() {
   return (
     <div className="app-container">
       <h2 style={{textAlign: 'center'}}>
-        {id ? '✏️ Editar Usuario y Permisos' : '👑 Crear Usuario'}
+        {id ? ' Editar Usuario y Permisos' : ' Crear Usuario'}
       </h2>
 
       <form onSubmit={handleSubmit} className="quote-form" style={{maxWidth: '600px', margin: '0 auto', display: 'flex', flexDirection: 'column'}}>
@@ -126,22 +126,22 @@ function AdminPanel() {
             <div style={{display: 'flex', flexDirection: 'column', gap: '10px'}}>
               <label style={{display: 'flex', alignItems: 'center', gap: '10px', cursor:'pointer'}}>
                 <input type="checkbox" name="access_kanban" checked={selectedPerms.access_kanban} onChange={handleCheck} />
-                📋 Ver Tablero Kanban
+                 Ver Tablero Kanban
               </label>
 
               <label style={{display: 'flex', alignItems: 'center', gap: '10px', cursor:'pointer'}}>
                 <input type="checkbox" name="access_quotes" checked={selectedPerms.access_quotes} onChange={handleCheck} />
-                💰 Ver Presupuestos
+                 Ver Presupuestos
               </label>
 
               <label style={{display: 'flex', alignItems: 'center', gap: '10px', cursor:'pointer'}}>
                 <input type="checkbox" name="access_projects" checked={selectedPerms.access_projects} onChange={handleCheck} />
-                🏗️ Ver Proyectos PXX
+                 Ver Proyectos PXX
               </label>
 
               <label style={{display: 'flex', alignItems: 'center', gap: '10px', cursor:'pointer'}}>
                 <input type="checkbox" name="access_clients" checked={selectedPerms.access_clients} onChange={handleCheck} />
-                🤝 Ver Clientes
+                 Ver Clientes
               </label>
             </div>
           </div>

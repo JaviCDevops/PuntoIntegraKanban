@@ -60,7 +60,7 @@ function CrearCliente() {
 
   return (
     <div className="app-container">
-      <h2 style={{textAlign: 'center'}}>{id ? '✏️ Editar Cliente' : 'Nuevo Cliente'}</h2>
+      <h2 style={{textAlign: 'center'}}>{id ? ' Editar Cliente' : 'Nuevo Cliente'}</h2>
       
       <form onSubmit={handleSubmit} className="quote-form">
         <label>RUT:</label>

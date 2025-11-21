@@ -76,7 +76,7 @@ function CreateBoard() {
 
   return (
     <div className="app-container">
-      <h2 style={{textAlign:'center'}}>{id ? '✏️ Editar Tablero' : 'Nuevo Tablero Kanban'}</h2>
+      <h2 style={{textAlign:'center'}}>{id ? ' Editar Tablero' : 'Nuevo Tablero Kanban'}</h2>
       
       <form onSubmit={handleSubmit} className="quote-form" style={{maxWidth:'600px', margin:'0 auto', display:'flex', flexDirection:'column'}}>
         <label>Título del Tablero:</label>
