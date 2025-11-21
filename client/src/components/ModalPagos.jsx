@@ -6,6 +6,7 @@ function ModalPagos({ project, onClose, onUpdate }) {
   const [numCuotas, setNumCuotas] = useState(1);
   const [payments, setPayments] = useState([]);
 
+  // Cargar datos existentes
   useEffect(() => {
     if (project.payments && project.payments.length > 0) {
       setPayments(project.payments);
@@ -59,10 +60,12 @@ function ModalPagos({ project, onClose, onUpdate }) {
     }
 
     try {
+      const token = localStorage.getItem('token');
       await axios.put(`${API_URL}/quotes/${project._id}`, { 
         status: project.status,
         payments: payments
-      });
+      }, { headers: { Authorization: `Bearer ${token}` } });
+      
       alert("Pagos actualizados correctamente");
       onUpdate();
       onClose();
@@ -129,25 +132,26 @@ function ModalPagos({ project, onClose, onUpdate }) {
 
               <div className="input-group">
                 <label>Estado</label>
-                  <select 
-                    value={p.status} 
-                    onChange={(e) => handleRowChange(i, 'status', e.target.value)}
-                    className={
-                      p.status === 'PAGADO' ? 'status-paid' : 
-                      p.status === 'FACTURADO' ? 'status-billed' : 
-                      'status-pending'
-                    }>
-                    <option value="PENDIENTE">PENDIENTE</option>
-                    <option value="FACTURADO">FACTURADO</option>
-                    <option value="PAGADO">PAGADO</option>
-                  </select>
+                <select 
+                  value={p.status} 
+                  onChange={(e) => handleRowChange(i, 'status', e.target.value)}
+                  className={
+                    p.status === 'PAGADO' ? 'status-paid' : 
+                    p.status === 'FACTURADO' ? 'status-billed' : 
+                    'status-pending'
+                  }
+                >
+                  <option value="PENDIENTE">PENDIENTE</option>
+                  <option value="FACTURADO">FACTURADO</option>
+                  <option value="PAGADO">PAGADO</option>
+                </select>
               </div>
             </div>
           ))}
         </div>
 
         <div className="modal-footer">
-          <button className="save-btn-modal" onClick={handleSave}>Guardar Información de Pagos</button>
+          <button className="save-btn-modal" onClick={handleSave}>💾 Guardar Información de Pagos</button>
         </div>
       </div>
     </div>

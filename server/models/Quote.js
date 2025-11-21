@@ -1,7 +1,13 @@
 const mongoose = require('mongoose');
 
 const QuoteSchema = new mongoose.Schema({
-  area: String,           
+  area: String,
+  clientRut: String,
+  clientGiro: String,
+  clientAddress: String,
+  clientContact: String,
+  clientEmail: String,
+  clientPhone: String,           
   clientName: String,     
   description: String,    
   netoUF: Number,         
