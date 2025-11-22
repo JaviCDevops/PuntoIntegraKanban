@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { API_URL } from '../config';
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaTrash } from "react-icons/fa";
 
 function UsersList() {
   const [users, setUsers] = useState([]);
@@ -27,16 +27,33 @@ function UsersList() {
     }
   };
 
+  const handleDelete = async (id) => {
+    if (!window.confirm("¿Estás seguro de eliminar este usuario? Esta acción no se puede deshacer.")) return;
+    
+    try {
+      const token = localStorage.getItem('token');
+      await axios.delete(`${API_URL}/admin/users/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      // Actualizar lista visualmente
+      setUsers(users.filter(u => u._id !== id));
+      alert("Usuario eliminado correctamente.");
+    } catch (error) {
+      alert(error.response?.data?.message || "Error al eliminar el usuario.");
+    }
+  };
+
   const formatRole = (role) => {
     switch(role) {
-      case 'admin': return ' Administrador';
-      default: return ' Usuario Estándar';
+      case 'admin': return '👑 Administrador';
+      default: return '👤 Usuario Estándar';
     }
   };
 
   return (
     <div className="app-container">
-      <h2 style={{textAlign: 'center', marginBottom: '20px'}}> Usuarios del Sistema</h2>
+      <h2 style={{textAlign: 'center', marginBottom: '20px'}}>👥 Usuarios del Sistema</h2>
       
       {loading ? (
         <p style={{textAlign: 'center'}}>Cargando...</p>
@@ -68,7 +85,7 @@ function UsersList() {
                   </td>
                   <td>
                     <div style={{fontSize:'0.8rem', color:'#666'}}>
-                        {user.role === 'admin' ? 'Acceso Total' : user.permissions?.length + ' accesos'}
+                        {user.role === 'admin' ? 'Acceso Total' : (user.permissions?.length || 0) + ' accesos'}
                     </div>
                   </td>
                   <td className="actions-cell">
@@ -77,6 +94,15 @@ function UsersList() {
                             <FaEdit />
                         </button>
                     </Link>
+                    
+                    {/* BOTÓN DE ELIMINAR */}
+                    <button 
+                      onClick={() => handleDelete(user._id)} 
+                      className="icon-btn delete-btn-table" 
+                      title="Eliminar Usuario"
+                    >
+                      <FaTrash />
+                    </button>
                   </td>
                 </tr>
               ))}

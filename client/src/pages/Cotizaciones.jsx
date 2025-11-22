@@ -28,6 +28,13 @@ function Cotizaciones() {
       await axios.put(`${API_URL}/quotes/${id}`, { status: newStatus }, {
         headers: { Authorization: `Bearer ${token}` }
       });
+      
+      // --- AVISO DE ADJUDICACIÓN ---
+      if (newStatus === '2-ADJUDICADO') {
+        alert("✅ ¡Cotización Adjudicada!\n\nSe ha generado el código de Proyecto y se ha creado la tarea en el Tablero Principal.");
+      }
+      // -----------------------------
+
       fetchQuotes(); 
     } catch (error) { console.error(error); }
   };
