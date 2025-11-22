@@ -1,138 +1,152 @@
- Sistema ERP & Gestión de Proyectos (MERN Stack)
+🏢 Sistema ERP & Gestión de Proyectos (MERN Stack)
 
-Plataforma web integral para la gestión operativa y comercial de la empresa. Este sistema unifica el flujo de trabajo desde la cotización inicial hasta la ejecución del proyecto, incluyendo control financiero y seguimiento de tareas mediante Kanban.
+Plataforma integral diseñada para la gestión comercial y operativa de empresas de servicios. Este sistema unifica el ciclo de vida del negocio: desde la gestión de clientes y cotizaciones, hasta la ejecución de proyectos y control financiero, todo bajo un entorno seguro con roles y permisos granulares.
 
- Demo Online
+🚀 Demo Online
 
-Frontend: https://puntointegrakanban.netlify.app/cotizaciones
-Backend: https://puntointegrakanban.onrender.com/
+Frontend: https://puntointegrakanban.netlify.app/login
+Backend: https://puntointegrakanban.onrender.com
 
- Módulos y Funcionalidades
+✨ Módulos y Funcionalidades Clave
 
- Módulo de Cotizaciones (Presupuestos)
+1. 🔐 Seguridad y Administración (RBAC)
 
-Sistema avanzado para la creación y seguimiento de propuestas comerciales.
+Sistema de autenticación robusto y gestión de usuarios.
 
-Cálculos Automáticos: Ingresa el valor Neto en UF y el sistema calcula automáticamente IVA (19%) y Total.
+Login Seguro: Autenticación mediante JWT (JSON Web Tokens) y contraseñas encriptadas con Bcrypt.
 
-Generación de PDF: Crea documentos formales con un clic, incluyendo:
+Roles Jerárquicos: Diferenciación entre Administrador (acceso total) y Usuarios Estándar.
 
-Logo corporativo.
+Permisos Granulares: El administrador puede asignar permisos específicos a cada usuario mediante un sistema de casillas (checkboxes):
 
-Firma digital de la empresa.
+☑️ Ver Kanban
 
-Detalle de costos desglosados.
+☑️ Ver Presupuestos
 
-Estados Visuales:
+☑️ Ver Proyectos
 
- 0-PENDIENTE DE ENVIO
+☑️ Ver Clientes
 
- 1-ESPERA RESPUESTA CLIENTE (Registra fecha de envío automática)
+Gestión de Usuarios: Creación, edición y eliminación de cuentas de equipo.
 
- 2-ADJUDICADO (Activa automatizaciones)
+2. 🤝 CRM (Gestión de Clientes)
 
- 3-PERDIDO
+Base de datos centralizada para agilizar la venta.
 
-Privacidad: Botón para ocultar montos sensibles en reuniones.
+Registro completo de clientes (RUT, Razón Social, Giro, Contacto, etc.).
 
-2.  Gestión de Proyectos (PXX)
+Autocompletado: Al crear una cotización, los datos del cliente se cargan automáticamente desde esta base de datos.
 
-Módulo exclusivo para obras adjudicadas.
+3. 💰 Módulo Comercial (Cotizaciones)
 
-Automatización Inteligente: Al cambiar una cotización a "ADJUDICADO", el sistema:
+Herramienta avanzada para la generación de negocios.
 
-Genera un código de proyecto correlativo único (P01, P02...).
+Cálculos en UF: Ingreso de valores netos en UF con cálculo automático de IVA y Totales.
 
-Crea automáticamente una tarjeta en el tablero Kanban.
+Pipeline Visual: Tablero tipo Kanban para gestionar el estado de las cotizaciones (Pendiente -> Enviada -> Adjudicado -> Perdido).
 
-Control de Pagos y Facturación:
+Generación de PDF: Exportación de documentos formales con Logo corporativo y Firma digital.
 
-Modal interactivo para gestionar cuotas.
+Snapshot de Datos: Los datos del cliente se guardan estáticos en la cotización para mantener el histórico aunque el cliente cambie sus datos después.
 
-División porcentual de pagos (ej: 4 pagos de 25%).
+4. 🏗️ Automatización Operativa (Proyectos)
 
-Seguimiento de Nº de Factura y estados: Pendiente, Facturado, Pagado.
+El corazón de la automatización del sistema.
 
-Indicadores visuales de progreso de pago en la tabla principal.
+Disparador Automático: Al cambiar una cotización a estado "ADJUDICADO", el sistema:
 
-3.  Tablero Kanban
+Genera un código de proyecto único correlativo (P01, P02...).
 
-Gestión operativa de tareas con funcionalidad "Drag & Drop".
+Crea automáticamente la tarea inicial en el Tablero Kanban Operativo.
 
-Columnas: Pendiente | En Proceso | Terminado.
+Gestión Financiera: Control detallado de estados de pago (Pendiente, Facturado, Pagado) con desglose de cuotas.
 
-Edición rápida de títulos.
+5. 📋 Tableros Kanban Dinámicos 2.0
 
-Sincronización en tiempo real con la base de datos.
+Sistema de gestión de tareas altamente flexible.
 
-4. Diseño Responsive
+Multi-Tablero: Creación ilimitada de tableros.
 
-Interfaz 100% adaptable a dispositivos móviles.
+Estructura Matriz (Swimlanes): Soporte para Columnas Personalizadas (Estados) y Filas Personalizadas (Prioridades, Equipos, etc.).
 
-Las tablas complejas se transforman en tarjetas verticales ("Cards") en celulares para fácil lectura.
+Asignación de Equipos: El administrador decide qué usuarios tienen acceso a qué tablero.
 
-Botones y controles optimizados para pantallas táctiles.
+Drag & Drop: Interfaz fluida para mover tareas entre celdas.
 
- Tecnologías Utilizadas
+🛠️ Stack Tecnológico
 
 Frontend (Cliente)
 
-React + Vite: Framework principal.
+React + Vite: Core del frontend.
 
-Axios: Comunicación con API.
+Axios: Peticiones HTTP con interceptores para JWT.
 
-jspdf & jspdf-autotable: Motor de generación de documentos PDF.
+React Router DOM: Manejo de rutas protegidas y navegación.
 
-react-icons: Iconografía profesional.
+@hello-pangea/dnd: Librería para la funcionalidad Drag & Drop.
 
-@hello-pangea/dnd: Librería para arrastrar y soltar (Kanban).
+jspdf & jspdf-autotable: Motor de generación de reportes PDF.
 
-CSS3: Estilos personalizados y Media Queries avanzadas.
+React Icons: Iconografía vectorial.
+
+CSS3 Moderno: Variables, Flexbox, Grid y Diseño 100% Responsive (Mobile First).
 
 Backend (Servidor)
 
-Node.js & Express: API RESTful robusta.
+Node.js & Express: API RESTful escalable.
 
 MongoDB Atlas: Base de datos NoSQL en la nube.
 
-Mongoose: Modelado de datos (Schemas con validaciones).
+Mongoose: Modelado de datos (Schemas) y validaciones.
 
- Instalación Local
+JWT & Bcryptjs: Seguridad y criptografía.
 
-Sigue estos pasos para correr el proyecto en tu computador:
+📦 Instalación Local
+
+Si deseas correr este proyecto en tu máquina local:
 
 Clonar el repositorio
 
-git clone [https://github.com/TU_USUARIO/PuntoIntegraKanban.git](https://github.com/TU_USUARIO/PuntoIntegraKanban.git)
+git clone https://github.com/JaviCDevops/PuntoIntegraKanban.git
 cd PuntoIntegraKanban
 
 
-Configurar Backend
+Configurar el Backend
 
 cd server
 npm install
-# Crea un archivo .env en /server con:
-# MONGO_URI=mongodb+srv://<user>:<pass>@cluster.mongodb.net/db
+
+
+Crea un archivo .env en la carpeta server:
+
+MONGO_URI=mongodb+srv://<usuario>:<password>@cluster.mongodb.net/mistareas
+JWT_SECRET=tu_clave_secreta_super_segura
+PORT=5000
+
+
+Iniciar servidor:
+
 npm run dev
 
 
-Configurar Frontend
+Configurar el Frontend
+
+Abre una nueva terminal.
 
 cd client
 npm install
-# Crea un archivo .env en /client si es necesario, o usa config.js
+
+
+(Opcional) Verifica client/src/config.js para apuntar a localhost:5000.
+
+Iniciar cliente:
+
 npm run dev
 
 
- Seguridad y Variables de Entorno
-
-Este proyecto utiliza variables de entorno para proteger credenciales sensibles.
-
-Backend: MONGO_URI (Conexión a Base de Datos).
-
-Frontend: VITE_API_URL (Dirección del servidor de producción).
-
- Autor
+✒️ Autor
 
 Desarrollado por Javier Cuevas Pérez.
-Expertise en Desarrollo Full Stack MERN y Automatización de Procesos.
+Ingeniero de Software & Desarrollador Full Stack.
+
+Este proyecto es propiedad intelectual de Javier Cuevas Pérez. Prohibida su distribución sin autorización.
