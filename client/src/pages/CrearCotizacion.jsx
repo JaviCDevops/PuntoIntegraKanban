@@ -1,50 +1,56 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useParams } from 'react-router-dom';
 import { API_URL } from '../config';
 
 function CrearCotizacion() {
   const navigate = useNavigate();
-  const [clients, setClients] = useState([]); 
+  const { id } = useParams();
+  const [clients, setClients] = useState([]);
   
-  // Estado ampliado con los nuevos campos
   const [formData, setFormData] = useState({ 
     area: '', 
     clientName: '', 
     description: '', 
     netoUF: '',
-    // Campos automáticos
-    clientRut: '',
-    clientGiro: '',
-    clientAddress: '',
-    clientContact: '',
-    clientEmail: '',
+    purchaseOrder: '', 
+    clientRut: '', 
+    clientGiro: '', 
+    clientAddress: '', 
+    clientContact: '', 
+    clientEmail: '', 
     clientPhone: ''
   });
 
   useEffect(() => {
-    const fetchClients = async () => {
+    const init = async () => {
+      const token = localStorage.getItem('token');
+      const headers = { Authorization: `Bearer ${token}` };
+
       try {
-        const token = localStorage.getItem('token');
-        const res = await axios.get(`${API_URL}/clients`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        setClients(res.data);
-      } catch (error) {
-        console.error("Error cargando clientes:", error);
+        const resClients = await axios.get(`${API_URL}/clients`, { headers });
+        const sortedClients = resClients.data.sort((a, b) => a.razonSocial.localeCompare(b.razonSocial));
+        setClients(sortedClients);
+      } catch (error) { console.error("Error cargando clientes"); }
+
+      if (id) {
+        try {
+          const resQuote = await axios.get(`${API_URL}/quotes/${id}`, { headers });
+          setFormData(resQuote.data);
+        } catch (error) { 
+          console.error("Error cargando cotización"); 
+          alert("No se pudo cargar la cotización para editar.");
+        }
       }
     };
-    fetchClients();
-  }, []);
+    init();
+  }, [id]);
 
-  // Lógica inteligente al seleccionar cliente
   const handleClientChange = (e) => {
     const selectedName = e.target.value;
     
-    // 1. Buscamos el objeto cliente completo en nuestra lista
     const clientData = clients.find(c => c.razonSocial === selectedName);
 
-    // 2. Si lo encontramos, rellenamos todo. Si no, limpiamos.
     if (clientData) {
       setFormData({
         ...formData,
@@ -57,35 +63,41 @@ function CrearCotizacion() {
         clientPhone: clientData.telefono
       });
     } else {
-      setFormData({
-        ...formData,
+      setFormData({ 
+        ...formData, 
         clientName: '',
-        clientRut: '', clientGiro: '', clientAddress: '',
-        clientContact: '', clientEmail: '', clientPhone: ''
+        clientRut: '', clientGiro: '', clientAddress: '', 
+        clientContact: '', clientEmail: '', clientPhone: '' 
       });
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
     if (!formData.clientName || !formData.netoUF) {
-      alert("Por favor completa los datos obligatorios");
+      alert("Por favor completa los datos obligatorios (Cliente y Neto UF)");
       return;
     }
 
     try {
       const token = localStorage.getItem('token');
-      // Enviamos todo el formData (incluyendo los datos automáticos)
+      const headers = { Authorization: `Bearer ${token}` };
+      
       const payload = {
         ...formData,
-        netoUF: parseFloat(formData.netoUF),
-        status: '0-PENDIENTE DE ENVIO'
+        netoUF: parseFloat(formData.netoUF)
       };
 
-      await axios.post(`${API_URL}/quotes`, payload, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      navigate('/cotizaciones'); 
+      if (id) {
+        await axios.put(`${API_URL}/quotes/${id}`, payload, { headers });
+        alert("Guardado correctamente");
+        navigate(-1); 
+      } else {
+        payload.status = '0-PENDIENTE DE ENVIO'; 
+        await axios.post(`${API_URL}/quotes`, payload, { headers });
+        navigate('/cotizaciones'); 
+      }
 
     } catch (error) {
       console.error("Error:", error.response?.data);
@@ -93,86 +105,99 @@ function CrearCotizacion() {
     }
   };
 
-  // Estilo para inputs de solo lectura (grisecitos)
-  const readOnlyStyle = { backgroundColor: '#f1f2f6', color: '#636e72', cursor: 'not-allowed' };
+  const readOnlyStyle = { backgroundColor: '#f1f2f6', color: '#636e72', cursor: 'default' };
 
   return (
     <div className="app-container">
-      <h2 style={{textAlign: 'center'}}>Nueva Cotización UF</h2>
+      <h2 style={{textAlign: 'center'}}>
+        {id ? (formData.projectCode ? ` Editar Proyecto ${formData.projectCode}` : ' Editar Cotización') : 'Nueva Cotización'}
+      </h2>
       
       <form onSubmit={handleSubmit} className="quote-form">
+        
         <label>Area:</label>
         <input 
-          type="text" placeholder="Ej: Marketing" required 
-          value={formData.area} 
+          type="text" required value={formData.area} 
           onChange={e => setFormData({...formData, area: e.target.value})} 
+          placeholder="Ej: Marketing"
         />
 
-        {/* SELECCIÓN DE CLIENTE */}
         <label>Cliente:</label>
         <select 
-          required 
-          value={formData.clientName} 
-          onChange={handleClientChange} // Usamos la nueva función
+          required value={formData.clientName} onChange={handleClientChange}
           style={{
             padding: '10px', borderRadius: '5px', border: '1px solid #ddd', 
-            backgroundColor: '#fff', color: '#2d3436', outline: 'none'
+            backgroundColor: '#fff', outline: 'none'
           }}
         >
           <option value="">-- Selecciona un Cliente --</option>
-          {clients.map(client => (
-            <option key={client._id} value={client.razonSocial}>
-              {client.razonSocial}
-            </option>
-          ))}
+          {clients.map(c => <option key={c._id} value={c.razonSocial}>{c.razonSocial}</option>)}
         </select>
         
-        {/* --- CAMPOS AUTOMÁTICOS (SOLO LECTURA) --- */}
         {formData.clientName && (
-          <>
-            <label>RUT:</label>
-            <input type="text" readOnly style={readOnlyStyle} value={formData.clientRut} />
-
-            <label>Giro:</label>
-            <input type="text" readOnly style={readOnlyStyle} value={formData.clientGiro} />
-
-            <label>Dirección:</label>
-            <input type="text" readOnly style={readOnlyStyle} value={formData.clientAddress} />
-
-            <label>Contacto:</label>
-            <input type="text" readOnly style={readOnlyStyle} value={formData.clientContact} />
-
-            <label>Email:</label>
-            <input type="text" readOnly style={readOnlyStyle} value={formData.clientEmail} />
-
-            <label>Teléfono:</label>
-            <input type="text" readOnly style={readOnlyStyle} value={formData.clientPhone} />
-            
-            {/* Separador visual */}
-            <div style={{gridColumn: '1 / -1', borderBottom: '1px solid #eee', margin: '10px 0'}}></div>
-          </>
+          <div style={{gridColumn: '1 / -1', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', padding: '15px', background: '#f8f9fa', borderRadius: '8px', margin: '10px 0'}}>
+            <div>
+                <label>RUT:</label>
+                <input type="text" readOnly style={readOnlyStyle} value={formData.clientRut || ''} />
+            </div>
+            <div>
+                <label>Giro:</label>
+                <input type="text" readOnly style={readOnlyStyle} value={formData.clientGiro || ''} />
+            </div>
+            <div style={{gridColumn: '1 / -1'}}>
+                <label>Dirección:</label>
+                <input type="text" readOnly style={readOnlyStyle} value={formData.clientAddress || ''} />
+            </div>
+            <div>
+                <label>Contacto:</label>
+                <input type="text" readOnly style={readOnlyStyle} value={formData.clientContact || ''} />
+            </div>
+            <div>
+                <label>Email:</label>
+                <input type="text" readOnly style={readOnlyStyle} value={formData.clientEmail || ''} />
+            </div>
+            <div>
+                <label>Teléfono:</label>
+                <input type="text" readOnly style={readOnlyStyle} value={formData.clientPhone || ''} />
+            </div>
+          </div>
         )}
-        {/* ----------------------------------------- */}
+
+        {id && (
+          <div style={{gridColumn: '1 / -1', background:'#e3f2fd', padding:'15px', borderRadius:'8px', border:'1px solid #90caf9', marginBottom:'10px'}}>
+            <label style={{color:'#1565c0', fontWeight:'bold'}}>📄 Orden de Compra (OC):</label>
+            <input 
+              type="text" 
+              placeholder="Ingresa el código de la OC..." 
+              value={formData.purchaseOrder || ''} 
+              onChange={e => setFormData({...formData, purchaseOrder: e.target.value})}
+              style={{borderColor:'#2196f3', width:'100%', padding:'10px', marginTop:'5px'}}
+            />
+          </div>
+        )}
 
         <label>Detalle Servicio:</label>
         <input 
-          type="text" placeholder="Descripción del servicio" required 
-          value={formData.description} 
+          type="text" required value={formData.description} 
           onChange={e => setFormData({...formData, description: e.target.value})} 
+          placeholder="Descripción breve del trabajo"
         />
         
         <label>Neto en UF:</label>
         <input 
-          type="number" step="0.01" placeholder="Ej: 10.5" required 
-          value={formData.netoUF} 
+          type="number" step="0.01" required value={formData.netoUF} 
           onChange={e => setFormData({...formData, netoUF: e.target.value})} 
+          placeholder="0.00"
         />
-        
+
         <div style={{display: 'flex', gap: '10px', marginTop: '20px', gridColumn: '1 / -1'}}>
-          <button type="submit" style={{background: '#0984e3'}}>Guardar Cotización</button>
-          <Link to="/cotizaciones" style={{width: '100%'}}>
-            <button type="button" style={{background: '#b2bec3', width: '100%'}}>Cancelar</button>
-          </Link>
+          <button type="submit" style={{background: '#0984e3'}}>
+            {id ? 'Guardar Cambios' : 'Guardar Cotización'}
+          </button>
+          
+          <button type="button" onClick={() => navigate(-1)} style={{background: '#b2bec3'}}>
+            Cancelar
+          </button>
         </div>
       </form>
     </div>

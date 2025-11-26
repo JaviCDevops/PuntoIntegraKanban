@@ -30,6 +30,29 @@ function CrearCliente() {
     }
   }, [id]);
 
+  const formatRut = (value) => {
+    let rut = value.replace(/[^0-9kK]/g, '');
+    
+    if (rut.length > 9) rut = rut.slice(0, 9);
+
+    if (rut.length < 2) return rut;
+
+    const body = rut.slice(0, -1);
+    const dv = rut.slice(-1).toUpperCase();
+
+    return `${body}-${dv}`;
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    if (name === 'rut') {
+      setFormData({ ...formData, rut: formatRut(value) });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -54,17 +77,22 @@ function CrearCliente() {
     }
   };
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
   return (
     <div className="app-container">
-      <h2 style={{textAlign: 'center'}}>{id ? ' Editar Cliente' : 'Nuevo Cliente'}</h2>
+      <h2 style={{textAlign: 'center'}}>{id ? '✏️ Editar Cliente' : 'Nuevo Cliente'}</h2>
       
       <form onSubmit={handleSubmit} className="quote-form">
-        <label>RUT:</label>
-        <input name="rut" type="text" placeholder="Ej: 76.123.456-K" required value={formData.rut} onChange={handleChange} />
+        <label>RUT (Sin puntos, con guión):</label>
+        <input 
+          name="rut" 
+          type="text" 
+          placeholder="Ej: 12345678-K" 
+          required 
+          value={formData.rut} 
+          onChange={handleChange} 
+          maxLength={10}
+        />
+
         <label>Razón Social:</label>
         <input name="razonSocial" type="text" placeholder="Nombre Empresa SpA" required value={formData.razonSocial} onChange={handleChange} />
         <label>Giro:</label>

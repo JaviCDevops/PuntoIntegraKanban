@@ -6,13 +6,12 @@ const UserSchema = new mongoose.Schema({
   password: { type: String, required: true },
   role: { 
     type: String, 
-    enum: ['admin', 'user'], // Simplificamos a Admin o Usuario normal
+    enum: ['admin', 'user'], 
     default: 'user' 
   },
-  // --- NUEVO: Lista de permisos específicos ---
   permissions: {
     type: [String], 
-    default: [] // Ej: ['access_quotes', 'access_kanban']
+    default: [] 
   },
   createdAt: { type: Date, default: Date.now }
 });

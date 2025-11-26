@@ -22,7 +22,7 @@ function BoardList() {
   };
 
   const handleDelete = async (e, boardId) => {
-    e.preventDefault(); // Evitar que el Link se active al hacer clic en el botón
+    e.preventDefault(); 
     if (!window.confirm("¿Seguro? Se borrarán TODAS las tareas de este tablero.")) return;
 
     try {
@@ -30,7 +30,7 @@ function BoardList() {
       await axios.delete(`${API_URL}/boards/${boardId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      fetchBoards(); // Recargar lista
+      fetchBoards();
     } catch (error) {
       alert("Error al eliminar");
     }
@@ -67,7 +67,6 @@ function BoardList() {
                   <h3 style={{margin:0}}>{board.title}</h3>
                 </div>
 
-                {/* BOTONES ADMIN (Editar / Borrar) */}
                 {user.role === 'admin' && (
                   <div style={{display:'flex', gap:'5px'}}>
                     <Link to={`/boards/edit/${board._id}`} onClick={(e) => e.stopPropagation()}>

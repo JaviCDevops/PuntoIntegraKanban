@@ -2,17 +2,15 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { API_URL } from '../config';
-import { FaFilePdf } from "react-icons/fa";
 
 function TableroCotizaciones() {
   const [quotes, setQuotes] = useState([]);
 
-  // Definimos las 4 columnas del flujo comercial
   const columns = {
-    '0-PENDIENTE DE ENVIO': { title: "Pendiente", color: "#e17055" }, // Naranjo
-    '1-ESPERA RESPUESTA CLIENTE': { title: "Enviada", color: "#00cec9" }, // Celeste
-    '2-ADJUDICADO': { title: "Adjudicado", color: "#0984e3" }, // Azul
-    '3-PERDIDO': { title: "Perdido", color: "#d63031" } // Rojo
+    '0-PENDIENTE DE ENVIO': { title: "Pendiente", color: "#e17055" }, 
+    '1-ESPERA RESPUESTA CLIENTE': { title: "Enviada", color: "#00cec9" }, 
+    '2-ADJUDICADO': { title: "Adjudicado", color: "#0984e3" }, 
+    '3-PERDIDO': { title: "Perdido", color: "#d63031" } 
   };
 
   useEffect(() => { fetchQuotes(); }, []);
@@ -30,26 +28,22 @@ function TableroCotizaciones() {
   const onDragEnd = async (result) => {
     const { source, destination, draggableId } = result;
     
-    // Si no se soltó en una columna válida o es la misma posición, no hacer nada
     if (!destination) return;
     if (source.droppableId === destination.droppableId && source.index === destination.index) return;
 
     const newStatus = destination.droppableId;
 
-    // 1. Actualización Optimista (Visual inmediata)
     const updatedQuotes = quotes.map(q => 
       q._id === draggableId ? { ...q, status: newStatus } : q
     );
     setQuotes(updatedQuotes);
 
-    // 2. Actualización en Backend
     try {
       const token = localStorage.getItem('token');
       await axios.put(`${API_URL}/quotes/${draggableId}`, { status: newStatus }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       
-      // Si se movió a Adjudicado, recargamos para traer el código PXX generado
       if (newStatus === '2-ADJUDICADO') {
         fetchQuotes();
         alert("¡Presupuesto Adjudicado! Se ha generado el Proyecto y la Tarea operativa.");
@@ -57,12 +51,11 @@ function TableroCotizaciones() {
 
     } catch (error) {
       console.error("Error al mover:", error);
-      fetchQuotes(); // Revertir cambios si falla
+      fetchQuotes(); 
       alert("Error al actualizar el estado");
     }
   };
 
-  // Formateador de moneda
   const fMoney = (amount) => amount ? `${Number(amount).toFixed(2)} UF` : '0 UF';
 
   return (
@@ -95,7 +88,7 @@ function TableroCotizaciones() {
                               style={{
                                 ...provided.draggableProps.style,
                                 borderLeft: `4px solid ${columnData.color}`,
-                                flexDirection: 'column', // Diseño vertical para más datos
+                                flexDirection: 'column', 
                                 gap: '5px'
                               }}
                             >

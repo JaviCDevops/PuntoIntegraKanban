@@ -5,7 +5,6 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-// --- IMPORTAR TODOS LOS MODELOS ---
 const User = require('./models/User');
 const Task = require('./models/Task');
 const Quote = require('./models/Quote');
@@ -36,7 +35,6 @@ const verifyToken = (req, res, next) => {
   } catch (err) { return res.status(401).json({ message: 'Unauthorized' }); }
 };
 
-// --- AUTH ---
 app.post('/api/auth/login', async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -54,11 +52,10 @@ app.post('/api/auth/register-first-admin', async (req, res) => {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     const newUser = new User({ ...req.body, password: hashedPassword, role: 'admin' });
     await newUser.save();
-    res.json({ message: 'Admin creado' });
+    res.json({ message: 'Admin creado con éxito' });
   } catch (error) { res.status(500).json({ error: error.message }); }
 });
 
-// --- ADMIN USERS (CRUD COMPLETO) ---
 app.post('/api/admin/create-user', verifyToken, async (req, res) => {
   if (req.user.role !== 'admin') return res.status(403).json({ message: 'Acceso denegado.' });
   try {
@@ -83,43 +80,46 @@ app.put('/api/admin/users/:id', verifyToken, async (req, res) => {
   if (req.user.role !== 'admin') return res.status(403).json({ message: 'Acceso denegado.' });
   try {
     const updateData = { ...req.body };
-    if (updateData.password) updateData.password = await bcrypt.hash(updateData.password, 10);
+    if (updateData.password && updateData.password.trim() !== '') {
+      updateData.password = await bcrypt.hash(updateData.password, 10);
+    } else {
+      delete updateData.password;
+    }
     const updatedUser = await User.findByIdAndUpdate(req.params.id, updateData, { new: true });
     res.json(updatedUser);
   } catch (error) { res.status(500).json({ error: error.message }); }
 });
 
-// NUEVA RUTA: ELIMINAR USUARIO
 app.delete('/api/admin/users/:id', verifyToken, async (req, res) => {
   if (req.user.role !== 'admin') return res.status(403).json({ message: 'Acceso denegado.' });
   try {
-    // Seguridad: No permitir que el admin se borre a sí mismo
-    if (req.user.id === req.params.id) {
-        return res.status(400).json({ message: 'No puedes eliminar tu propia cuenta.' });
-    }
+    if (req.user.id === req.params.id) return res.status(400).json({ message: 'No puedes eliminarte a ti mismo' });
     await User.findByIdAndDelete(req.params.id);
     res.json({ message: "Usuario eliminado" });
   } catch (error) { res.status(500).json({ error: error.message }); }
 });
 
-// --- CLIENTS ---
 app.get('/api/clients', verifyToken, async (req, res) => {
-  try { const clients = await Client.find().sort({ razonSocial: 1 }); res.json(clients); } catch (e) { res.status(500).json({ error: e.message }); }
+  try { const clients = await Client.find().sort({ razonSocial: 1 }); res.json(clients); } 
+  catch (e) { res.status(500).json({ error: e.message }); }
 });
 app.post('/api/clients', verifyToken, async (req, res) => {
-  try { const newClient = new Client(req.body); await newClient.save(); res.json(newClient); } catch (e) { res.status(400).json({ message: e.message }); }
+  try { const newClient = new Client(req.body); await newClient.save(); res.json(newClient); } 
+  catch (e) { res.status(400).json({ message: e.message }); }
 });
 app.get('/api/clients/:id', verifyToken, async (req, res) => {
   try { res.json(await Client.findById(req.params.id)); } catch (e) { res.status(500).send(e); }
 });
 app.put('/api/clients/:id', verifyToken, async (req, res) => {
-  try { res.json(await Client.findByIdAndUpdate(req.params.id, req.body, { new: true })); } catch (e) { res.status(500).send(e); }
+  try { res.json(await Client.findByIdAndUpdate(req.params.id, req.body, { new: true })); } 
+  catch (e) { res.status(400).json({ message: e.message }); }
 });
 app.delete('/api/clients/:id', verifyToken, async (req, res) => {
-  try { await Client.findByIdAndDelete(req.params.id); res.json({msg: "ok"}); } catch (e) { res.status(500).send(e); }
+  try { await Client.findByIdAndDelete(req.params.id); res.json({ message: "Eliminado" }); } 
+  catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// --- BOARDS ---
+
 app.get('/api/boards', verifyToken, async (req, res) => {
   try {
     const query = req.user.role === 'admin' ? {} : { members: req.user.id };
@@ -127,11 +127,13 @@ app.get('/api/boards', verifyToken, async (req, res) => {
     res.json(boards);
   } catch (error) { res.status(500).json({error: error.message}); }
 });
+
 app.post('/api/boards', verifyToken, async (req, res) => {
   if (req.user.role !== 'admin') return res.status(403).json({message: 'Solo admin'});
   try { const newBoard = new Board(req.body); await newBoard.save(); res.json(newBoard); } 
   catch (error) { res.status(500).json({error: error.message}); }
 });
+
 app.get('/api/boards/:id', verifyToken, async (req, res) => {
   try {
     const board = await Board.findById(req.params.id);
@@ -139,28 +141,31 @@ app.get('/api/boards/:id', verifyToken, async (req, res) => {
     res.json(board);
   } catch (error) { res.status(500).json({error: error.message}); }
 });
+
 app.put('/api/boards/:id', verifyToken, async (req, res) => {
   if (req.user.role !== 'admin') return res.status(403).json({message: 'Solo admin'});
   try { res.json(await Board.findByIdAndUpdate(req.params.id, req.body, { new: true })); } catch (e) { res.status(500).send(e); }
 });
+
 app.delete('/api/boards/:id', verifyToken, async (req, res) => {
   if (req.user.role !== 'admin') return res.status(403).json({message: 'Solo admin'});
   try { 
-    await Task.deleteMany({ boardId: req.params.id });
+    await Task.deleteMany({ boardId: req.params.id }); 
     await Board.findByIdAndDelete(req.params.id);
     res.json({message: "Deleted"}); 
   } catch (e) { res.status(500).send(e); }
 });
 
-// --- TASKS ---
 app.get('/api/tasks/board/:boardId', verifyToken, async (req, res) => {
   try {
     const { boardId } = req.params;
     if (!boardId || boardId === 'undefined' || !ObjectId.isValid(boardId)) return res.status(400).json({msg: 'ID invalido'});
+    
     const tasks = await Task.find({ boardId }).sort({ createdAt: -1 });
     res.json(tasks);
   } catch (error) { res.status(500).json({error: error.message}); }
 });
+
 app.post('/api/tasks', verifyToken, async (req, res) => {
   try { 
     const newTask = new Task(req.body); 
@@ -171,21 +176,75 @@ app.post('/api/tasks', verifyToken, async (req, res) => {
     res.status(400).json({message: e.message}); 
   }
 });
+
 app.put('/api/tasks/:id', verifyToken, async (req, res) => {
-  try { await Task.findByIdAndUpdate(req.params.id, req.body); res.json({msg:"ok"}); } catch (e) { res.status(500).send(e); }
-});
-app.delete('/api/tasks/:id', verifyToken, async (req, res) => {
-  try { await Task.findByIdAndDelete(req.params.id); res.json({msg:"ok"}); } catch (e) { res.status(500).send(e); }
+  try { await Task.findByIdAndUpdate(req.params.id, req.body); res.json({msg:"ok"}); } 
+  catch (e) { res.status(500).send(e); }
 });
 
-// --- QUOTES ---
-app.get('/api/quotes', verifyToken, async (req, res) => {
-  try { const quotes = await Quote.find().sort({ createdAt: -1 }); res.json(quotes); } catch (e) { res.status(500).json({error: e.message}); }
+app.put('/api/tasks/:id/checklist', verifyToken, async (req, res) => {
+  try {
+    const { checklist } = req.body;
+    const task = await Task.findByIdAndUpdate(req.params.id, { checklist }, { new: true });
+    res.json(task);
+  } catch (error) { res.status(500).json({ error: error.message }); }
 });
+
+app.delete('/api/tasks/:id', verifyToken, async (req, res) => {
+  try { await Task.findByIdAndDelete(req.params.id); res.json({msg:"ok"}); } 
+  catch (e) { res.status(500).send(e); }
+});
+
+app.get('/api/quotes', verifyToken, async (req, res) => {
+  try {
+    const { startDate, endDate } = req.query;
+    
+    const today = new Date();
+    await Quote.updateMany(
+      { 
+        expirationDate: { $lt: today }, 
+        status: { $nin: ['2-ADJUDICADO', '3-PERDIDO'] } 
+      }, 
+      { $set: { status: '3-PERDIDO' } } 
+    );
+
+    let query = {};
+    if (startDate && endDate) {
+      const end = new Date(endDate);
+      end.setHours(23, 59, 59, 999);
+      query.createdAt = { $gte: new Date(startDate), $lte: end };
+    }
+    const quotes = await Quote.find(query).sort({ createdAt: -1 }); 
+    res.json(quotes);
+  } catch (e) { res.status(500).json({error: e.message}); }
+});
+
+app.get('/api/quotes/:id', verifyToken, async (req, res) => {
+  try {
+    const quote = await Quote.findById(req.params.id);
+    if (!quote) return res.status(404).json({ message: 'Cotización no encontrada' });
+    res.json(quote);
+  } catch (error) { res.status(500).json({ error: error.message }); }
+});
+
 app.post('/api/quotes', verifyToken, async (req, res) => { 
   try {
     const data = req.body;
     if (!data.status) data.status = '0-PENDIENTE DE ENVIO';
+    
+    const currentYear = new Date().getFullYear();
+    const latestProject = await Quote.findOne({
+      projectCode: { $regex: `^${currentYear}_` }
+    }).sort({ projectCode: -1 });
+
+    let nextNum = 1;
+    if (latestProject && latestProject.projectCode) {
+      const parts = latestProject.projectCode.split('_');
+      if (parts.length === 2) nextNum = parseInt(parts[1]) + 1;
+    }
+    const formattedNum = nextNum < 10 ? `0${nextNum}` : nextNum;
+    data.projectCode = `${currentYear}_${formattedNum}`;
+
     const newQuote = new Quote(data);
     await newQuote.save();
     res.json(newQuote);
@@ -194,7 +253,7 @@ app.post('/api/quotes', verifyToken, async (req, res) => {
 
 app.put('/api/quotes/:id', verifyToken, async (req, res) => {
   try {
-    const { status, payments } = req.body; 
+    const { status, payments, deadline, startDate, reminderDate, expirationDate, purchaseOrder, ...otherFields } = req.body; 
     const quote = await Quote.findById(req.params.id);
     if (!quote) return res.status(404).json({ message: 'No encontrada' });
 
@@ -202,47 +261,105 @@ app.put('/api/quotes/:id', verifyToken, async (req, res) => {
       if (status === '1-ESPERA RESPUESTA CLIENTE' && quote.status !== '1-ESPERA RESPUESTA CLIENTE') {
         quote.fechaEnvio = new Date();
       }
-      if (status === '2-ADJUDICADO' && !quote.projectCode) {
-        const count = await Quote.countDocuments({ projectCode: { $exists: true } });
-        const nextNum = count + 1;
-        const formattedNum = nextNum < 10 ? `0${nextNum}` : nextNum;
-        quote.projectCode = `P${formattedNum}`;
+
+      if (status === '2-ADJUDICADO' && quote.status !== '2-ADJUDICADO') {
         try {
-          let defaultBoard = await Board.findOne();
-          if (!defaultBoard) {
-             defaultBoard = new Board({ 
-               title: "Tablero General", 
-               description: "Tablero creado automáticamente",
-               columns: [
-                 { id: 'pendiente', title: 'Pendiente', color: '#ff7675' },
-                 { id: 'en_progreso', title: 'En Proceso', color: '#fdcb6e' },
-                 { id: 'completada', title: 'Terminado', color: '#55efc4' }
-               ],
-               rows: [{ id: 'general', title: 'General', color: '#dfe6e9' }]
-             });
-             await defaultBoard.save();
+          const existingTask = await Task.findOne({ title: { $regex: `^${quote.projectCode}` } });
+          
+          if (!existingTask) {
+            let targetBoard = await Board.findOne({ members: req.user.id });
+            
+            if (!targetBoard) targetBoard = await Board.findOne();
+
+            if (!targetBoard) {
+               targetBoard = new Board({ 
+                 title: "Tablero General", description: "Automático",
+                 columns: [{ id: 'pend', title: 'Pendiente', color: '#ff7675' }],
+                 rows: [{ id: 'gen', title: 'General', color: '#dfe6e9' }],
+                 members: [req.user.id] 
+               });
+               await targetBoard.save();
+            }
+            
+            const firstColId = targetBoard.columns?.[0]?.id || 'pend';
+            const firstRowId = targetBoard.rows?.[0]?.id || 'def-row';
+
+            const newTask = new Task({
+              title: `${quote.projectCode} - ${quote.clientName}: ${quote.description}`,
+              status: firstColId,
+              rowId: firstRowId,
+              boardId: targetBoard._id,
+              checklist: []
+            });
+            await newTask.save();
+            console.log(`Tarea creada en tablero: ${targetBoard.title}`);
           }
-          const firstColId = defaultBoard.columns?.[0]?.id || 'pendiente';
-          const firstRowId = defaultBoard.rows?.[0]?.id || 'def-row';
-          const newTask = new Task({
-            title: `${quote.projectCode} - ${quote.clientName}: ${quote.description}`,
-            status: firstColId,
-            rowId: firstRowId,
-            boardId: defaultBoard._id
-          });
-          await newTask.save();
-        } catch (taskError) { console.error("Error al crear tarea automática:", taskError.message); }
+        } catch (taskError) { console.error("Error creando tarea automática:", taskError); }
       }
       quote.status = status;
     }
+
     if (payments) quote.payments = payments;
+    if (deadline) quote.deadline = deadline;
+    if (startDate) quote.startDate = startDate;
+    if (reminderDate) quote.reminderDate = reminderDate;
+    if (expirationDate) quote.expirationDate = expirationDate;
+    
+    if (purchaseOrder !== undefined) quote.purchaseOrder = purchaseOrder;
+
+    if (otherFields.clientName) {
+        quote.clientName = otherFields.clientName;
+        quote.clientRut = otherFields.clientRut;
+        quote.clientGiro = otherFields.clientGiro;
+        quote.clientAddress = otherFields.clientAddress;
+        quote.clientContact = otherFields.clientContact;
+        quote.clientEmail = otherFields.clientEmail;
+        quote.clientPhone = otherFields.clientPhone;
+    }
+    if (otherFields.description) quote.description = otherFields.description;
+    if (otherFields.area) quote.area = otherFields.area;
+    if (otherFields.netoUF) quote.netoUF = otherFields.netoUF;
+
     const updatedQuote = await quote.save();
     res.json(updatedQuote);
   } catch (error) { res.status(400).json({ message: error.message }); }
 });
 
 app.delete('/api/quotes/:id', verifyToken, async (req, res) => {
-  try { await Quote.findByIdAndDelete(req.params.id); res.json({msg:"ok"}); } catch (e) { res.status(500).send(e); }
+  try { await Quote.findByIdAndDelete(req.params.id); res.json({msg:"ok"}); } 
+  catch (e) { res.status(500).send(e); }
+});
+
+app.get('/api/notifications', verifyToken, async (req, res) => {
+  try {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const alerts = [];
+
+    const quotesToCheck = await Quote.find({
+      status: { $nin: ['2-ADJUDICADO', '3-PERDIDO'] },
+      reminderDate: { $exists: true, $ne: null }
+    });
+
+    quotesToCheck.forEach(q => {
+      const reminder = new Date(q.reminderDate);
+      reminder.setHours(0,0,0,0);
+      if (today >= reminder) {
+        alerts.push({ id: q._id, type: 'warning', title: `🔔 Recordatorio: ${q.clientName}`, message: `Seguimiento a ${q.projectCode}`, link: '/pipeline' });
+      }
+    });
+
+    const activeProjects = await Quote.find({ status: '2-ADJUDICADO', deadline: { $exists: true, $ne: null } });
+    activeProjects.forEach(p => {
+      const deadline = new Date(p.deadline);
+      deadline.setHours(0,0,0,0);
+      if (deadline < today) {
+         alerts.push({ id: p._id, type: 'danger', title: `¡Atrasado! ${p.projectCode}`, message: `Venció el ${deadline.toLocaleDateString()}`, link: '/proyectos' });
+      }
+    });
+
+    res.json(alerts);
+  } catch (error) { res.status(500).json({ error: error.message }); }
 });
 
 app.listen(PORT, () => console.log(`Server running on ${PORT}`));

@@ -11,10 +11,8 @@ function Clientes() {
 
   const fetchClients = async () => {
     try {
-      // 1. RECUPERAR EL TOKEN
       const token = localStorage.getItem('token');
       
-      // 2. ENVIARLO EN LA CABECERA
       const res = await axios.get(`${API_URL}/clients`, {
         headers: { Authorization: `Bearer ${token}` }
       });

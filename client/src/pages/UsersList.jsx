@@ -36,7 +36,6 @@ function UsersList() {
         headers: { Authorization: `Bearer ${token}` }
       });
       
-      // Actualizar lista visualmente
       setUsers(users.filter(u => u._id !== id));
       alert("Usuario eliminado correctamente.");
     } catch (error) {
@@ -95,7 +94,6 @@ function UsersList() {
                         </button>
                     </Link>
                     
-                    {/* BOTÓN DE ELIMINAR */}
                     <button 
                       onClick={() => handleDelete(user._id)} 
                       className="icon-btn delete-btn-table" 

@@ -13,14 +13,12 @@ function CreateBoard() {
   const [users, setUsers] = useState([]);
   const [selectedMembers, setSelectedMembers] = useState([]);
   
-  // COLUMNAS
-  const [columns, setColumns] = useState([
+const [columns, setColumns] = useState([
     { id: 'col-1', title: 'Pendiente', color: '#ff7675' },
     { id: 'col-2', title: 'En Proceso', color: '#fdcb6e' },
     { id: 'col-3', title: 'Terminado', color: '#55efc4' }
   ]);
 
-  // FILAS (NUEVO)
   const [rows, setRows] = useState([
     { id: 'row-1', title: 'General', color: '#74b9ff' }
   ]);
@@ -58,12 +56,10 @@ function CreateBoard() {
     }
   };
 
-  // --- GESTIÓN COLUMNAS ---
   const addColumn = () => setColumns([...columns, { id: `col-${Date.now()}`, title: 'Nueva Columna', color: '#dfe6e9' }]);
   const removeColumn = (cid) => columns.length > 1 && setColumns(columns.filter(c => c.id !== cid));
   const updateColumn = (cid, field, val) => setColumns(columns.map(c => c.id === cid ? { ...c, [field]: val } : c));
 
-  // --- GESTIÓN FILAS (NUEVO) ---
   const addRow = () => setRows([...rows, { id: `row-${Date.now()}`, title: 'Nueva Fila', color: '#a29bfe' }]);
   const removeRow = (rid) => rows.length > 1 && setRows(rows.filter(r => r.id !== rid));
   const updateRow = (rid, field, val) => setRows(rows.map(r => r.id === rid ? { ...r, [field]: val } : r));
@@ -85,11 +81,10 @@ function CreateBoard() {
 
   return (
     <div className="app-container">
-      <h2 style={{textAlign:'center'}}>{id ? '✏️ Editar Tablero' : 'Nuevo Tablero'}</h2>
+      <h2 style={{textAlign:'center'}}>{id ? 'Editar Tablero' : 'Nuevo Tablero'}</h2>
       
       <form onSubmit={handleSubmit} className="quote-form" style={{maxWidth:'900px', margin:'0 auto', display:'flex', flexDirection:'column'}}>
         
-        {/* DATOS BÁSICOS */}
         <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'20px', width:'100%'}}>
           <div><label>Título:</label><input type="text" required value={title} onChange={e => setTitle(e.target.value)} /></div>
           <div><label>Descripción:</label><input type="text" value={description} onChange={e => setDescription(e.target.value)} /></div>
@@ -97,7 +92,6 @@ function CreateBoard() {
 
         <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'20px', width:'100%', marginTop:'20px'}}>
           
-          {/* GESTOR DE COLUMNAS */}
           <div style={{background:'#f8f9fa', padding:'15px', borderRadius:'8px', border:'1px solid #eee'}}>
             <label style={{marginBottom:'10px', display:'block'}}>COLUMNAS (Vertical):</label>
             <div style={{display:'flex', flexDirection:'column', gap:'10px'}}>
@@ -113,7 +107,6 @@ function CreateBoard() {
             <button type="button" onClick={addColumn} style={{marginTop:'10px', background:'#636e72', fontSize:'0.8rem', width:'100%'}}><FaPlus /> Agregar Columna</button>
           </div>
 
-          {/* GESTOR DE FILAS */}
           <div style={{background:'#f0f2f5', padding:'15px', borderRadius:'8px', border:'1px solid #eee'}}>
             <label style={{marginBottom:'10px', display:'block'}}>FILAS (Horizontal):</label>
             <div style={{display:'flex', flexDirection:'column', gap:'10px'}}>
@@ -130,7 +123,6 @@ function CreateBoard() {
 
         </div>
 
-        {/* MIEMBROS */}
         <label style={{marginTop:'20px'}}>Asignar Miembros:</label>
         <div style={{background:'#fff', padding:'15px', border:'1px solid #ddd', borderRadius:'5px', maxHeight:'150px', overflowY:'auto'}}>
           {users.map(u => (

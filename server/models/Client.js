@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const ClientSchema = new mongoose.Schema({
-  rut: { type: String, required: true, unique: true }, // RUT único
+  rut: { type: String, required: true, unique: true },
   razonSocial: { type: String, required: true },
   giro: String,
   direccion: String,

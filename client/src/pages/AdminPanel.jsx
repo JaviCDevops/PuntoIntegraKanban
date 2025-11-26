@@ -4,14 +4,13 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { API_URL } from '../config';
 
 function AdminPanel() {
-  const { id } = useParams(); // Detectar si estamos editando
+  const { id } = useParams(); 
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     username: '', email: '', password: '', role: 'user'
   });
 
-  // Estado para los checkboxes
   const [selectedPerms, setSelectedPerms] = useState({
     access_kanban: false,
     access_quotes: false,
@@ -19,7 +18,6 @@ function AdminPanel() {
     access_clients: false
   });
 
-  // Cargar datos si es edición
   useEffect(() => {
     if (id) {
       const fetchUser = async () => {
@@ -32,7 +30,6 @@ function AdminPanel() {
           const u = res.data;
           setFormData({ username: u.username, email: u.email, password: '', role: u.role });
           
-          // Rellenar permisos
           const perms = { ...selectedPerms };
           if (u.permissions) {
             u.permissions.forEach(p => { if (perms.hasOwnProperty(p)) perms[p] = true; });
@@ -60,17 +57,14 @@ function AdminPanel() {
       
       const payload = { ...formData, permissions: permissionsArray };
       
-      // Si es edición y no puso password, la borramos del payload para no enviarla vacía
       if (id && !formData.password) delete payload.password;
 
       if (id) {
-        // PUT
         await axios.put(`${API_URL}/admin/users/${id}`, payload, {
           headers: { Authorization: `Bearer ${token}` }
         });
         alert("Usuario actualizado correctamente");
       } else {
-        // POST
         await axios.post(`${API_URL}/admin/create-user`, payload, {
           headers: { Authorization: `Bearer ${token}` }
         });
@@ -101,7 +95,6 @@ function AdminPanel() {
         <label>Contraseña {id && <span style={{fontSize:'0.8em', fontWeight:'normal'}}>(Dejar en blanco para mantener la actual)</span>}:</label>
         <input 
           type="password" 
-          // Requerido solo si es CREAR nuevo
           required={!id} 
           value={formData.password} 
           onChange={e => setFormData({...formData, password: e.target.value})} 
@@ -118,7 +111,6 @@ function AdminPanel() {
           <option value="admin">Administrador (Acceso Total)</option>
         </select>
 
-        {/* SECCIÓN DE PERMISOS */}
         {formData.role === 'user' && (
           <div style={{background: '#f1f2f6', padding: '15px', borderRadius: '8px', marginBottom: '20px'}}>
             <h4 style={{marginTop: 0, color: '#2d3436'}}>Accesos permitidos:</h4>
