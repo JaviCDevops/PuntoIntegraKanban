@@ -165,7 +165,7 @@ function CrearCotizacion() {
 
         {id && (
           <div style={{gridColumn: '1 / -1', background:'#e3f2fd', padding:'15px', borderRadius:'8px', border:'1px solid #90caf9', marginBottom:'10px'}}>
-            <label style={{color:'#1565c0', fontWeight:'bold'}}>📄 Orden de Compra (OC):</label>
+            <label style={{color:'#1565c0', fontWeight:'bold'}}>Orden de Compra (OC):</label>
             <input 
               type="text" 
               placeholder="Ingresa el código de la OC..." 
